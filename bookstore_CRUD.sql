@@ -40,20 +40,34 @@ INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID;
 -- READ OPERATIONS for dropdowns
 -- --------------------------------------------------------
 
--- get all book IDs and titles to populate the Book dropdown under BookOrderDetails
-SELECT bookID, title FROM Books;
+-- get all userIDs and usernames to populate the user dropdown under Orders
+SELECT userID, userName FROM Users;
+
+-- get all couponIDs and couponCodes to populate the coupon dropdown under Orders
+SELECT couponID, couponCode FROM Coupons;
 
 
 -- --------------------------------------------------------
--- CREATE OPERATIONS for BookOrderDetails
+-- CREATE OPERATION for Orders
 -- : denotes a parameter to be provided by the user
 -- --------------------------------------------------------
-INSERT INTO BookOrderDetails (bookID, orderID, quantityOrdered, price) 
-    VALUES (:bookID_Input, :orderID_Input, :quantityOrdered_Input, :price_Input);
+INSERT INTO Orders (userID, orderDate, totalPrice, street, city, state, zipCode, couponID) 
+    VALUES (:userID_Input, :orderDate_Input, :totalPrice_Input, :street_Input, :city_Input, 
+            :state_Input, :zipCode_Input, :couponID_Input);
 
 
 -- --------------------------------------------------------
--- UPDATE OPERATIONS for BookOrderDetails
+-- UPDATE OPERATION for Orders
+-- : denotes a parameter to be provided by the user
+-- --------------------------------------------------------
+UPDATE Orders 
+SET userID = :userID_Input, orderDate = :orderDate_Input, totalPrice = :totalPrice_Input, street = :street_Input, 
+    city = :city_Input, state = :state_Input, zipCode = :zipCode_Input, couponID = :couponID_Input 
+WHERE orderID = :orderID_selected_from_Orders_update_form
+
+
+-- --------------------------------------------------------
+-- UPDATE OPERATION for BookOrderDetails
 -- : denotes a parameter to be provided by the user
 -- --------------------------------------------------------
 UPDATE BookOrderDetails 
@@ -63,8 +77,7 @@ WHERE bookID = :bookID_selected_from_BookOrderDetails_update_form
 
 
 -- --------------------------------------------------------
--- DELETE OPERATIONS for BookOrderDetails
+-- DELETE OPERATION for Orders
 -- --------------------------------------------------------
-DELETE FROM BookOrderDetails 
-WHERE bookID = :bookID_selected_from_browse_BookOrderDetails_page 
- AND orderID = :orderID_selected_from_browse_BookOrderDetails_page;
+DELETE FROM Orders
+WHERE orderID = :orderID_selected_from_browse_Orders_page;
