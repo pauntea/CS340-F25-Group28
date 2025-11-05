@@ -188,6 +188,7 @@ INSERT INTO `Users` (`userID`, `userName`, `email`, `phoneNumber`) VALUES
 -- Indexes for table `BookOrderDetails`
 --
 ALTER TABLE `BookOrderDetails`
+  ADD PRIMARY KEY (bookID, orderID),
   ADD KEY `fk_Books_has_Orders_Orders1_idx` (`orderID`),
   ADD KEY `fk_Books_has_Orders_Books1_idx` (`bookID`);
 
