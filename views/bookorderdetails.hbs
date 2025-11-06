@@ -1,0 +1,57 @@
+<!--
+Citation for CS 340 Project - Group 28
+Date: 11/06/2025
+Adapted from and based on CS 340 - Exploration - Web Application Technology
+Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
+!-->
+
+<h1>BookOrderDetails</h1>
+<h2>Managing BookOrderDetails - View and Update BookOrderDetails</h2>
+
+{{! READ table }}
+<table>
+    <thead>
+        {{! For the table header row, we print the DB attribute names }}
+        <tr>
+            {{#each bookOrderDetails.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+        </tr>
+    </thead>
+
+    <tbody>
+        {{! For each row, print the book (title), orderID, quantityOrdered, and price }}
+        {{#each bookOrderDetails}}
+        <tr>
+            <td>{{this.book}}</td>
+            <td>{{this.orderID}}</td>
+            <td>{{this.quantityOrdered}}</td>
+            <td>{{this.price}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+{{! UPDATE form }}
+<h2>Update BookOrderDetails</h2>
+<form class='cuForm' id='update_bookOrderDetails_form'>
+    <label for='update_bookorderdetails_bookID'>bookID: </label>
+    <input type='number' name='update_bookorderdetails_bookID' id='update_bookorderdetails_bookID' min='0' />
+    <br>
+    
+    <label for='update_bookorderdetails_orderID'>orderID: </label>
+    <input type='number' name='update_bookorderdetails_orderID' id='update_bookorderdetails_orderID' min='0' />
+    <br>
+
+    <label for='update_bookorderdetails_quantityordered'>quantityOrdered: </label>
+    <input type='number' name='update_bookorderdetails_quantityOrdered' id='update_bookorderdetails_quantityordered' min='0' />
+    <br>
+
+    <label for='update_bookorderdetails_price'>price: </label>
+    <input type='number' step = "0.01" name='update_bookorderdetails_price' id='update_bookorderdetails_price' min='0' />
+    <br>
+    
+    <input type='submit' />
+</form>

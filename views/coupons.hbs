@@ -1,0 +1,35 @@
+<!--
+Citation for CS 340 Project - Group 28
+Date: 11/06/2025
+Adapted from and based on CS 340 - Exploration - Web Application Technology
+Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
+!-->
+
+<h1>Coupons</h1>
+<h2>View Existing Coupons</h2>
+
+{{! READ table }}
+<table>
+    <thead>
+        {{! For the table header row, we print the DB attribute names }}
+        <tr>
+            {{#each coupons.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+        </tr>
+    </thead>
+
+    <tbody>
+        {{! For each row, print the couponID, couponCode, discountType, discount }}
+        {{#each coupons}}
+        <tr>
+            <td>{{this.couponID}}</td>
+            <td>{{this.couponCode}}</td>
+            <td>{{this.discountType}}</td>
+            <td>{{this.discount}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
