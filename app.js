@@ -114,7 +114,7 @@ app.get('/bookorderdetails', async function (req, res) {
         // Create and execute our queries
         const query1 = `SELECT Books.title AS book, BookOrderDetails.orderID, BookOrderDetails.quantityOrdered, BookOrderDetails.price \
                         FROM BookOrderDetails \
-                        INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID ;`;
+                        INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID;`;
         const [bookOrderDetails] = await db.query(query1);
 
         // Render the bookorderdetails.hbs file, and also send the renderer
