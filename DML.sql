@@ -32,10 +32,9 @@ LEFT JOIN Coupons ON Orders.couponID = Coupons.couponID
 ORDER BY Orders.orderID;
 
 -- get all records from BookOrderDetails table, showing book title instead of book Id
-SELECT BookOrderDetails.orderID, Books.title AS book, BookOrderDetails.quantityOrdered, BookOrderDetails.price
+SELECT Books.title AS book, BookOrderDetails.orderID, BookOrderDetails.quantityOrdered, BookOrderDetails.price
 FROM BookOrderDetails
-INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID
-ORDER BY BookOrderDetails.orderID;
+INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID;
 
 
 -- --------------------------------------------------------
