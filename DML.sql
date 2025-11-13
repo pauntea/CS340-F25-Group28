@@ -28,7 +28,8 @@ SELECT Orders.orderID, Users.userName AS user, Orders.orderDate, Orders.totalPri
     Orders.city, Orders.state, Orders.zipCode, Coupons.couponCode AS couponCode
 FROM Orders
 INNER JOIN Users ON Orders.userID = Users.userID
-INNER JOIN Coupons ON Orders.couponID = Coupons.couponID;
+LEFT JOIN Coupons ON Orders.couponID = Coupons.couponID
+ORDER BY Orders.orderID;
 
 -- get all records from BookOrderDetails table, showing book title instead of book Id
 SELECT Books.title AS book, BookOrderDetails.orderID, BookOrderDetails.quantityOrdered, BookOrderDetails.price
@@ -45,6 +46,12 @@ SELECT userID, userName FROM Users;
 
 -- get all couponIDs and couponCodes to populate the coupon dropdown under Orders
 SELECT couponID, couponCode FROM Coupons;
+
+-- get all bookIDs and titles to populate the book dropdown under BookOrderDetails
+SELECT bookID, title FROM Books;
+
+-- get all orderIDs to populate the order dropdown under BookOrderDetails
+SELECT orderID FROM Orders;
 
 
 -- --------------------------------------------------------
