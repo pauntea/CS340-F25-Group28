@@ -13,11 +13,15 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     <thead>
         {{! For the table header row, we print the DB attribute names }}
         <tr>
-            {{#each orders.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
+            <th>Order ID</th>
+            <th>User</th>
+            <th>Date</th>
+            <th>Total Price</th>
+            <th>Street</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Zip Code</th>
+            <th>Coupon Code</th>
         </tr>
     </thead>
 
@@ -63,7 +67,7 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     </select>
     <br>
 
-    <label for='create_orders_orderDate'>Order Date:</label>
+    <label for='create_orders_orderDate'>Date:</label>
     <input type='date' name='create_orders_orderDate' id='create_orders_orderDate' />
     <br>
 
@@ -126,7 +130,7 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     </select>
     <br>
 
-    <label for='update_orders_orderDate'>Order Date:</label>
+    <label for='update_orders_orderDate'>Date:</label>
     <input type='date' name='update_orders_orderDate' id='update_orders_orderDate' />
     <br>
 

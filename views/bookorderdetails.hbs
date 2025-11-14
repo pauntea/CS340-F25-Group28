@@ -6,18 +6,17 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
 !-->
 
 <h1>Book Order Details</h1>
-<h2>View and Update BookOrderDetails</h2>
+<h2>View and Update Book Order Details</h2>
 
 {{! READ table }}
 <table>
     <thead>
         {{! For the table header row, we print the DB attribute names }}
         <tr>
-            {{#each bookOrderDetails.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
+            <th>Book</th>
+            <th>Order ID</th>
+            <th>Quantity</th>
+            <th>Price</th>
         </tr>
     </thead>
 
@@ -50,7 +49,7 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     </select>
     <br>
 
-    <label for='update_bookorderdetails_quantityordered'>Quantity Ordered: </label>
+    <label for='update_bookorderdetails_quantityordered'>Quantity: </label>
     <input type='number' name='update_bookorderdetails_quantityOrdered' id='update_bookorderdetails_quantityordered' min='0' />
     <br>
 

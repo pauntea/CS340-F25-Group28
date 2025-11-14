@@ -13,11 +13,15 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     <thead>
         {{! For the table header row, we print the DB attribute names }}
         <tr>
-            {{#each books.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
+            <th>Book ID</th>
+            <th>Genre</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total Sold</th>
+            <th>Description</th>
         </tr>
     </thead>
 
