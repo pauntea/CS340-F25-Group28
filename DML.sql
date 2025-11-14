@@ -47,8 +47,11 @@ SELECT userID, userName FROM Users;
 -- get all couponIDs and couponCodes to populate the coupon dropdown under Orders
 SELECT couponID, couponCode FROM Coupons;
 
--- get all bookIDs and titles to populate the bookID dropdown under BookOrderDetails
+-- get all bookIDs and titles to populate the book dropdown under BookOrderDetails
 SELECT bookID, title FROM Books;
+
+-- get all orderID to populate the orderID dropdown under BookOrderDetails
+SELECT orderID FROM Orders;
 
 -- --------------------------------------------------------
 -- CREATE OPERATION for Orders
