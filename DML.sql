@@ -28,7 +28,8 @@ SELECT Orders.orderID, Users.userName AS user, Orders.orderDate, Orders.totalPri
     Orders.city, Orders.state, Orders.zipCode, Coupons.couponCode AS couponCode
 FROM Orders
 INNER JOIN Users ON Orders.userID = Users.userID
-INNER JOIN Coupons ON Orders.couponID = Coupons.couponID;
+LEFT JOIN Coupons ON Orders.couponID = Coupons.couponID
+ORDER BY Orders.orderID;
 
 -- get all records from BookOrderDetails table, showing book title instead of book Id
 SELECT Books.title AS book, BookOrderDetails.orderID, BookOrderDetails.quantityOrdered, BookOrderDetails.price
@@ -46,6 +47,8 @@ SELECT userID, userName FROM Users;
 -- get all couponIDs and couponCodes to populate the coupon dropdown under Orders
 SELECT couponID, couponCode FROM Coupons;
 
+-- get all bookIDs and titles to populate the bookID dropdown under BookOrderDetails
+SELECT bookID, title FROM Books;
 
 -- --------------------------------------------------------
 -- CREATE OPERATION for Orders
@@ -61,7 +64,7 @@ INSERT INTO Orders (userID, orderDate, totalPrice, street, city, state, zipCode,
 -- : denotes a parameter to be provided by the user
 -- --------------------------------------------------------
 UPDATE Orders 
-SET userID = :userID_Input, orderDate = :orderDate_Input, totalPrice = :totalPrice_Input, street = :street_Input, 
+SET orderID = :orderID_Input, userID = :userID_Input, orderDate = :orderDate_Input, totalPrice = :totalPrice_Input, street = :street_Input, 
     city = :city_Input, state = :state_Input, zipCode = :zipCode_Input, couponID = :couponID_Input 
 WHERE orderID = :orderID_selected_from_Orders_update_form
 

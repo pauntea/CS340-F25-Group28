@@ -3,6 +3,10 @@
 // Adapted from and based on CS 340 - Exploration - Web Application Technology
 // Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
 
+// AI tools were used: prompt - "how to make the orderDate show as date only not full timestamp in this code snippet?"
+// Source URL: https://copilot.microsoft.com/
+
+
 // ########################################
 // ########## SETUP
 
@@ -84,8 +88,13 @@ app.get('/orders', async function (req, res) {
                         Orders.city, Orders.state, Orders.zipCode, Coupons.couponCode AS couponCode \
                         FROM Orders \
                         INNER JOIN Users ON Orders.userID = Users.userID \
-                        INNER JOIN Coupons ON Orders.couponID = Coupons.couponID;`;
+                        LEFT JOIN Coupons ON Orders.couponID = Coupons.couponID \
+                        ORDER BY Orders.orderID;`;
         const [orders] = await db.query(query1);
+
+        // Ensure date is a string like "YYYY-MM-DD"
+        orders.forEach(order => {
+        order.orderDate = new Date(order.orderDate).toISOString().split('T')[0];});
 
         // Render the orders.hbs file, and also send the renderer
         // an object that contains our orders information
