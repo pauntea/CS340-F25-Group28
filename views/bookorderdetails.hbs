@@ -5,8 +5,8 @@ Adapted from and based on CS 340 - Exploration - Web Application Technology
 Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
 !-->
 
-<h1>BookOrderDetails</h1>
-<h2>Managing BookOrderDetails - View and Update BookOrderDetails</h2>
+<h1>Book Order Details</h1>
+<h2>View and Update BookOrderDetails</h2>
 
 {{! READ table }}
 <table>
@@ -37,12 +37,19 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
 {{! UPDATE form }}
 <h2>Update BookOrderDetails</h2>
 <form class='cuForm' id='update_bookOrderDetails_form'>
-    <label for='update_bookorderdetails_bookID'>Book ID: </label>
-    <input type='number' name='update_bookorderdetails_bookID' id='update_bookorderdetails_bookID' min='0' />
-    <br>
-    
     <label for='update_bookorderdetails_orderID'>Order ID: </label>
     <input type='number' name='update_bookorderdetails_orderID' id='update_bookorderdetails_orderID' min='0' />
+    <br>
+
+    <label for='update_bookorderdetails_bookID'>Book: </label>
+    <select name='update_bookorderdetails_bookID' id='update_bookorderdetails_bookID' required>
+        <option value='' disabled selected>Select a Book</option>
+        {{#each people}}
+        <option value='{{this.book}}' required>
+            {{this.book}}
+        </option>
+        {{/each}}
+    </select>
     <br>
 
     <label for='update_bookorderdetails_quantityordered'>Quantity Ordered: </label>
