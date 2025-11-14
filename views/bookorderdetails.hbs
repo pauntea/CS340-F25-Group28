@@ -35,7 +35,7 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
 </table>
 
 {{! UPDATE form }}
-<h2>Update BookOrderDetails</h2>
+<h2>Update Book Order Details</h2>
 <form class='cuForm' id='update_bookOrderDetails_form'>
     <label for='update_bookorderdetails_orderID'>Order ID: </label>
     <input type='number' name='update_bookorderdetails_orderID' id='update_bookorderdetails_orderID' min='0' />
@@ -44,11 +44,9 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     <label for='update_bookorderdetails_bookID'>Book: </label>
     <select name='update_bookorderdetails_bookID' id='update_bookorderdetails_bookID' required>
         <option value='' disabled selected>Select a Book</option>
-        {{#each people}}
-        <option value='{{this.book}}' required>
-            {{this.book}}
-        </option>
-        {{/each}}
+        <option value = "Pride and Prejudice">Pride and Prejudice</option>
+        <option value = "1984">1984</option>
+        <option value = "Babel">Babel</option>
     </select>
     <br>
 
