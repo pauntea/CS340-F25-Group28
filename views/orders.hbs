@@ -59,9 +59,11 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     <label for='create_orders_userID'>User: </label>
     <select name='create_orders_userID' id='create_orders_userID' required>
         <option value='' disabled selected>Select a User</option>
-        {{#each orders}}
+        {{#each users}}
         <option value='{{this.user}}' required>
-            {{this.user}}
+            {{this.userID}}
+            -
+            {{this.userName}}
         </option>
         {{/each}}
     </select>
@@ -94,8 +96,10 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     <label for='create_orders_couponID'>Coupon:</label>
     <select name='create_orders_couponID' id='create_orders_couponID' required>
         <option value='' disabled selected>Select a Coupon</option>
-        {{#each orders}}
-        <option value='{{this.couponCode}}' required>
+        {{#each coupons}}
+        <option value='{{this.coupon}}' required>
+            {{this.couponID}}
+            -
             {{this.couponCode}}
         </option>
         {{/each}}
@@ -122,9 +126,11 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     <label for='update_orders_userID'>User:</label>
     <select name='update_orders_userID' id='update_orders_userID' required>
         <option value='' disabled selected>Select a User</option>
-        {{#each orders}}
+        {{#each users}}
         <option value='{{this.user}}' required>
-            {{this.user}}
+            {{this.userID}}
+            -
+            {{this.userName}}
         </option>
         {{/each}}
     </select>
@@ -157,8 +163,10 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     <label for='update_orders_couponID'>Coupon:</label>
     <select name='update_orders_couponID' id='update_orders_couponID' required>
         <option value='' disabled selected>Select a Coupon</option>
-        {{#each orders}}
-        <option value='{{this.couponCode}}' required>
+        {{#each coupons}}
+        <option value='{{this.coupon}}' required>
+            {{this.couponID}}
+            -
             {{this.couponCode}}
         </option>
         {{/each}}
