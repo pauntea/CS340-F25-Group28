@@ -4,7 +4,13 @@
 // Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
 // Source URL (Step 4 Draft): https://canvas.oregonstate.edu/courses/2017561/assignments/10111742
 
-// AI tools were used: prompt - "how to make the orderDate show as date only not full timestamp in this code snippet?"
+// AI tools were used: 
+// date: 11/13/2025
+// prompt - "how to make the orderDate show as date only not full timestamp in this code snippet?"
+// Source URL: https://copilot.microsoft.com/
+
+// date: 11/19/2025
+// prompt - "how to show a reset success message and redirect to a page in this code snippet?"
 // Source URL: https://copilot.microsoft.com/
 
 
@@ -18,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const PORT = 44028;
+const PORT = 44228;
 
 // Database
 const db = require('./database/db-connector');
@@ -91,7 +97,12 @@ app.get('/orders', async function (req, res) {
                         INNER JOIN Users ON Orders.userID = Users.userID \
                         LEFT JOIN Coupons ON Orders.couponID = Coupons.couponID \
                         ORDER BY Orders.orderID;`;
+        const query2 = 'SELECT userID, userName FROM Users;';
+        const query3 = 'SELECT couponID, couponCode FROM Coupons;';
         const [orders] = await db.query(query1);
+        const [users] = await db.query(query2);
+        const [coupons] = await db.query(query3);
+
 
         // Ensure date is a string like "YYYY-MM-DD"
         orders.forEach(order => {
@@ -100,7 +111,7 @@ app.get('/orders', async function (req, res) {
         // Render the orders.hbs file, and also send the renderer
         // an object that contains our orders information
         // showing userName instead of userID and couponCode instead of couponID
-        res.render('orders', { orders: orders });
+        res.render('orders', { orders: orders, users: users, coupons: coupons });
     } catch (error) {
         console.error('Error executing queries:', error);
         // Send a generic error message to the browser
@@ -116,12 +127,16 @@ app.get('/bookorderdetails', async function (req, res) {
         const query1 = `SELECT Books.title AS book, BookOrderDetails.orderID, BookOrderDetails.quantityOrdered, BookOrderDetails.price \
                         FROM BookOrderDetails \
                         INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID;`;
+        const query2 = 'SELECT orderID FROM Orders;';
+        const query3 = 'SELECT bookID, title FROM Books;';
         const [bookOrderDetails] = await db.query(query1);
+        const [orderID] = await db.query(query2);
+        const [books] = await db.query(query3);
 
         // Render the bookorderdetails.hbs file, and also send the renderer
         // an object that contains our bookOrderDetails information
         // showing book title instead of bookID
-        res.render('bookorderdetails', { bookOrderDetails: bookOrderDetails});
+        res.render('bookorderdetails', { bookOrderDetails: bookOrderDetails, orderID: orderID, books: books });
     } catch (error) {
         console.error('Error executing queries:', error);
         // Send a generic error message to the browser
@@ -168,10 +183,13 @@ app.get('/coupons', async function (req, res) {
 });
 
 // DELETE ROUTES
-app.get('/books-delete-babel', async function (req, res) {
+app.get('/delete-order327', async function (req, res) {
     try {
-        const query1 = 'CALL DeleteBookBabel();';
+        const query1 = 'CALL DeleteOrder327();';
       await db.query(query1);
+
+      // Redirect back to the Orders page
+    res.redirect('/orders');
     } catch (error) {
       console.error("Error executing PL/SQL:", error);
         // Send a generic error message to the browser
@@ -184,6 +202,12 @@ app.get('/reset', async function (req, res) {
     try {
         const query1 = 'CALL sp_load_bookstoredb();';
       await db.query(query1);
+       res.send(`
+      <p>Reset successful! Reload in 2 seconds</p>
+      <script>
+        setTimeout(() => { window.location.href = '/orders'; }, 2000);
+      </script>
+    `);
     } catch (error) {
       console.error("Error executing PL/SQL:", error);
         // Send a generic error message to the browser
