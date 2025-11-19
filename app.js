@@ -1,7 +1,8 @@
 // Citation for CS 340 Project - Group 28
 // Date: 11/06/2025
-// Adapted from and based on CS 340 - Exploration - Web Application Technology
+// Adapted from and based on CS 340 - Exploration - Web Application Technology and Step 4 Draft
 // Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
+// Source URL (Step 4 Draft): https://canvas.oregonstate.edu/courses/2017561/assignments/10111742
 
 // AI tools were used: prompt - "how to make the orderDate show as date only not full timestamp in this code snippet?"
 // Source URL: https://copilot.microsoft.com/
@@ -163,6 +164,17 @@ app.get('/coupons', async function (req, res) {
         res.status(500).send(
             'An error occurred while executing the database queries.'
         );
+    }
+});
+
+app.get('/books-delete-babel', async function (req, res) {
+    try {
+        const query1 = 'CALL DeleteBookBabel();';
+      await db.query(query1);
+    } catch (error) {
+      console.error("Error executing PL/SQL:", error);
+        // Send a generic error message to the browser
+      res.status(500).send("An error occurred while executing the PL/SQL.");
     }
 });
 
