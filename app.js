@@ -167,9 +167,22 @@ app.get('/coupons', async function (req, res) {
     }
 });
 
+// DELETE ROUTES
 app.get('/books-delete-babel', async function (req, res) {
     try {
         const query1 = 'CALL DeleteBookBabel();';
+      await db.query(query1);
+    } catch (error) {
+      console.error("Error executing PL/SQL:", error);
+        // Send a generic error message to the browser
+      res.status(500).send("An error occurred while executing the PL/SQL.");
+    }
+});
+
+// RESET ROUTES
+app.get('/reset', async function (req, res) {
+    try {
+        const query1 = 'CALL sp_load_bookstoredb();';
       await db.query(query1);
     } catch (error) {
       console.error("Error executing PL/SQL:", error);
