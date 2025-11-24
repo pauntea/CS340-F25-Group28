@@ -51,7 +51,7 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     <select name='update_bookorderdetails_bookID' id='update_bookorderdetails_bookID' required>
         <option value='' disabled selected>Select a book</option>
         {{#each books}}
-        <option value='{{this.books}}' required>
+        <option value='{{this.bookID}}' required>
             {{this.bookID}}
             -
             {{this.title}}

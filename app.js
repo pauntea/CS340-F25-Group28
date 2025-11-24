@@ -13,6 +13,9 @@
 // prompt - "how to show a reset success message and redirect to a page in this code snippet?"
 // Source URL: https://copilot.microsoft.com/
 
+// date: 11/24/2025
+// prompt - "how to check and make couponID as NULL if it's empty string in this code snippet in app.js?"
+// Source URL: https://copilot.microsoft.com/
 
 // ########################################
 // ########## SETUP
@@ -24,7 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const PORT = 44028;
+const PORT = 13136;
 
 // Database
 const db = require('./database/db-connector');
@@ -182,20 +185,6 @@ app.get('/coupons', async function (req, res) {
     }
 });
 
-// DELETE ROUTES
-app.get('/delete-order327', async function (req, res) {
-    try {
-        const query1 = 'CALL DeleteOrder327();';
-      await db.query(query1);
-
-      // Redirect back to the Orders page
-    res.redirect('/orders');
-    } catch (error) {
-      console.error("Error executing PL/SQL:", error);
-        // Send a generic error message to the browser
-      res.status(500).send("An error occurred while executing the PL/SQL.");
-    }
-});
 
 // RESET ROUTES
 app.get('/reset', async function (req, res) {
@@ -214,6 +203,114 @@ app.get('/reset', async function (req, res) {
       res.status(500).send("An error occurred while executing the PL/SQL.");
     }
 });
+
+
+// CREATE ROUTES
+app.post('/orders/create', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+                
+        // If the couponID is empty string, make it null.
+        if (data.create_orders_couponID.length === 0) {
+            data.create_orders_couponID = null;
+        }
+
+        // Create and execute the query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_CreateOrder(?, ?, ?, ?, ?, ?, ?, ?, @new_id);`;
+
+
+        // Store ID of last inserted row
+        const [[[rows]]] = await db.query(query1, [
+            data.create_orders_userID,
+            data.create_orders_orderDate,
+            data.create_orders_totalPrice,
+            data.create_orders_street,
+            data.create_orders_city,
+            data.create_orders_state,
+            data.create_orders_zipCode,
+            data.create_orders_couponID,
+        ]);
+
+        console.log(` Created order. ID: ${rows.new_id} `);
+        
+        // Redirect back to the Orders page
+        res.redirect('/orders');
+    } catch (error) {
+        console.error('Error executing PL/SQL:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the PL/SQL.'
+        );
+    }
+});
+
+
+// DELETE ROUTES
+app.post('/orders/delete', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+        // Create and execute the query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_DeleteOrder(?);`;
+        await db.query(query1, [data.delete_orders_id]);
+
+        console.log(` Deleted order. ID: ${data.delete_orders_id} `);
+
+        // Redirect back to the Orders page
+        res.redirect('/orders');
+    } catch (error) {
+        console.error('Error executing PL/SQL:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the PL/SQL.'
+        );
+    }
+});
+
+
+// UPDATE ROUTES
+app.post('/orders/update', async function (req, res) {
+    try {
+        // Parse frontend form information
+        const data = req.body;
+                
+        // If the couponID is empty string, make it null.
+        if (data.update_orders_couponID.length === 0) {
+            data.update_orders_couponID = null;
+        }
+
+        // Create and execute the query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_UpdateOrder(?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+        await db.query(query1, [
+            data.update_orders_orderID,
+            data.update_orders_userID,
+            data.update_orders_orderDate,
+            data.update_orders_totalPrice,
+            data.update_orders_street,
+            data.update_orders_city,
+            data.update_orders_state,
+            data.update_orders_zipCode,
+            data.update_orders_couponID,
+            ]);
+
+        console.log(` Update order. ID: ${data.update_orders_orderID} `);
+        
+        // Redirect back to the Orders page
+        res.redirect('/orders');
+    } catch (error) {
+        console.error('Error executing PL/SQL:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the PL/SQL.'
+        );
+    }
+});
+
 
 // ########################################
 // ########## LISTENER
