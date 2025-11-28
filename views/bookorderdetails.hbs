@@ -46,7 +46,7 @@ Source URL: https://copilot.microsoft.com/
 <h2>Update Book Order Details</h2>
 <form class='cuForm' id='update_bookOrderDetails_form' method='POST' action='/bookorderdetails/update'>
     <label for='update_bookorderdetails_orderID'>Order ID:</label>
-    <select name='update_bookorderdetails_orderID' id='update_bookorderdetails_orderID' onchange='this.form.submit()' required>
+    <select name='update_bookorderdetails_orderID' id='update_bookorderdetails_orderID' required>
         <option value='' disabled selected>Select an order</option>
         {{#each orderID}}
         <option value='{{this.orderID}}' required>
