@@ -82,19 +82,19 @@ Source URL: https://copilot.microsoft.com/
 
 {{! Script to update drop-down list options under bookID to reflect bookIDs under selected orderID, Source: Copilot}}
 <script>
-    document.getElementById('update_bookorderdetails_orderID').addEventListener('change', function() {
-    const orderID = this.orderID;
-    fetch(`/bookorderdetails/get-books?orderID=${orderID}`)
-        .then(res => res.json())
-        .then(data => {
-        const bookSelect = document.getElementById('update_bookorderdetails_orderID');
-        update_bookorderdetails_orderID.innerHTML = '';
-        data.forEach(book => {
-            const option = document.createElement('option');
-            option.value = book.bookID;
-            option.textContent = book.title;
-            update_bookorderdetails_orderID.appendChild(option);
-        });
-        });
-    });
+document.getElementById('update_bookorderdetails_orderID').addEventListener('change', function() {
+  const orderID = this.value;
+
+  fetch(`/bookorderdetails/get-books?orderID=${orderID}`)
+    .then(res => res.json())
+    .then(data => {
+      update_bookorderdetails_bookID.innerHTML = '';
+      data.forEach(book => {
+        const option = document.createElement('option');
+        option.value = book.bookID;
+        option.textContent = `${book.bookID} - ${book.title}`;
+        update_bookorderdetails_bookID.appendChild(option);
+      });
+    })
+});
 </script>
