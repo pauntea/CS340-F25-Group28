@@ -46,7 +46,7 @@ Source URL: https://copilot.microsoft.com/
 <h2>Update Book Order Details</h2>
 <form class='cuForm' id='update_bookOrderDetails_form' method='POST' action='/bookorderdetails/update'>
     <label for='update_bookorderdetails_orderID'>Order ID:</label>
-    <select name='update_bookorderdetails_orderID' id='update_bookorderdetails_orderID' required>
+    <select name='update_bookorderdetails_orderID' id='update_bookorderdetails_orderID' onchange='this.form.submit()' required>
         <option value='' disabled selected>Select an order</option>
         {{#each orderID}}
         <option value='{{this.orderID}}' required>
@@ -80,19 +80,20 @@ Source URL: https://copilot.microsoft.com/
     <input type='submit' />
 </form>
 
+{{! Script to update drop-down list options under bookID to reflect bookIDs under selected orderID, Source: Copilot}}
 <script>
     document.getElementById('update_bookorderdetails_orderID').addEventListener('change', function() {
     const orderID = this.orderID;
     fetch(`/bookorderdetails/get-books?orderID=${orderID}`)
         .then(res => res.json())
         .then(data => {
-        const bookSelect = document.getElementById('bookSelect');
-        bookSelect.innerHTML = '';
+        const bookSelect = document.getElementById('update_bookorderdetails_orderID');
+        update_bookorderdetails_orderID.innerHTML = '';
         data.forEach(book => {
             const option = document.createElement('option');
             option.value = book.bookID;
             option.textContent = book.title;
-            bookSelect.appendChild(option);
+            update_bookorderdetails_orderID.appendChild(option);
         });
         });
     });

@@ -155,6 +155,7 @@ app.get('/bookorderdetails', async function (req, res) {
     }
 });
 
+// Route for select bookID drop-down options, handles retrieval of bookID according to selected orderID, source: Copilot
 app.get('/bookorderdetails/get-books', async (req, res) => {
     const selectedOrderID = req.query.orderID;
     // SELECT depending on previously selected OrderID
