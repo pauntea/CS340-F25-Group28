@@ -18,10 +18,8 @@
 // prompt - "how to check and make couponID as NULL if it's empty string in this code snippet in app.js?"
 // Source URL: https://copilot.microsoft.com/
 
-// date: 11/28/2025
-// prompts - "I have two select fields. I want to update the second drop-down list options to display only values that are under the selected first value. 
-//            How can I implement this when I am using SQL and HBS to display the choices? I want HBS to show the values when I do SELECT WHERE."
-//         - Reload fixes - JS script for fetch + JS Debugging
+// date: 12/01/2025
+// prompt - "How can I assign the old and new values (foreign keys) to be sent to my JS file? + Debugging"
 // Source URL: https://copilot.microsoft.com/
 
 // ########################################
@@ -134,18 +132,20 @@ app.get('/orders', async function (req, res) {
 app.get('/bookorderdetails', async function (req, res) {
     try {
         // Create and execute our queries
-        const query1 = `SELECT Books.title AS book, BookOrderDetails.orderID, BookOrderDetails.quantityOrdered, BookOrderDetails.price \
+        const query1 = `SELECT Books.title AS book, BookOrderDetails.orderID, BookOrderDetails.bookID, BookOrderDetails.quantityOrdered, BookOrderDetails.price \
                         FROM BookOrderDetails \
                         INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID;`;
         const query2 = 'SELECT orderID FROM Orders;';
+        const query3 = 'SELECT bookID, title FROM Books;';
 
         const [bookOrderDetails] = await db.query(query1);
         const [orderID] = await db.query(query2);
+        const [books] = await db.query(query3);
 
         // Render the bookorderdetails.hbs file, and also send the renderer
         // an object that contains our bookOrderDetails information
         // showing book title instead of bookID
-        res.render('bookorderdetails', { bookOrderDetails: bookOrderDetails, orderID: orderID });
+        res.render('bookorderdetails', { bookOrderDetails: bookOrderDetails, orderID: orderID, books: books});
     } catch (error) {
         console.error('Error executing queries:', error);
         // Send a generic error message to the browser
@@ -153,20 +153,6 @@ app.get('/bookorderdetails', async function (req, res) {
             'An error occurred while executing the database queries.'
         );
     }
-});
-
-// Route for select bookID drop-down options, handles retrieval of bookID according to selected orderID, source: Copilot
-app.get('/bookorderdetails/get-books', async (req, res) => {
-    const selectedOrderID = req.query.orderID;
-    // SELECT depending on previously selected OrderID
-    const query3 = `
-      SELECT Books.bookID, title
-      FROM Books
-      INNER JOIN BookOrderDetails ON Books.bookID = BookOrderDetails.bookID
-      WHERE BookOrderDetails.orderID = ?;
-    `;
-    const [books] = await db.query(query3, [selectedOrderID]);
-    res.json(books);
 });
 
 app.get('/genres', async function (req, res) {
@@ -344,8 +330,10 @@ app.post('/bookorderdetails/update', async function (req, res) {
 
         // Create and execute our query
         // Using parameterized queries (Prevents SQL injection attacks)
-        const query1 = 'CALL sp_UpdateBookOrderDetails(?, ?, ?, ?);';
+        const query1 = 'CALL sp_UpdateBookOrderDetails(?, ?, ?, ?, ?, ?);';
         await db.query(query1, [
+            data.old_orderID,
+            data.old_bookID,
             data.update_bookorderdetails_orderID,
             data.update_bookorderdetails_bookID,
             data.update_bookorderdetails_quantityOrdered,

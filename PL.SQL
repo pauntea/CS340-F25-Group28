@@ -9,6 +9,11 @@
 
 -- PL/SQL for CREATE, UPDATE, DELETE Orders and UPDATE BookOrderDetails
 
+-- AI tools were used: 
+-- date: 12/01/2025
+-- prompt - "If I am updating an intersection table where orderID and bookID are foreign keys, 
+--           how can I update the foreign keys? I plan on picking the specific row to change via an inline edit button on a table."
+-- Source URL: https://copilot.microsoft.com/
 
 -- #############################
 -- CREATE order
@@ -108,14 +113,16 @@ DROP PROCEDURE IF EXISTS sp_UpdateBookOrderDetails;
 
 DELIMITER //
 CREATE PROCEDURE sp_UpdateBookOrderDetails(
-    IN p_orderID INT,
-    IN p_bookID INT,
+    p_oldOrderID INT,
+    p_oldBookID INT,
+    IN p_newOrderID INT,
+    IN p_newBookID INT,
     IN p_quantityOrdered INT,
     IN p_price DECIMAL(6,2))
 
 BEGIN
     UPDATE BookOrderDetails 
-    SET orderID = p_orderID, bookID = p_bookID, quantityOrdered = p_quantityOrdered, price = p_price
-    WHERE orderID = p_orderID AND bookID = p_bookID;
+    SET orderID = p_newOrderID, bookID = p_newBookID, quantityOrdered = p_quantityOrdered, price = p_price
+    WHERE orderID = p_oldOrderID AND bookID = p_oldBookID;
 END //
 DELIMITER ;
