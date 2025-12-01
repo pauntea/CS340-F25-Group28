@@ -9,6 +9,11 @@
 
 -- PL/SQL for CREATE, UPDATE, DELETE Orders and UPDATE BookOrderDetails
 
+-- AI tools were used: 
+-- date: 12/01/2025
+-- prompt - "If I am updating an intersection table where orderID and bookID are foreign keys, 
+--           how can I update the foreign keys? I plan on picking the specific row to change via an inline edit button on a table."
+-- Source URL: https://copilot.microsoft.com/
 
 -- #############################
 -- CREATE order

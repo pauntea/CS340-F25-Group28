@@ -18,10 +18,8 @@
 // prompt - "how to check and make couponID as NULL if it's empty string in this code snippet in app.js?"
 // Source URL: https://copilot.microsoft.com/
 
-// date: 11/28/2025
-// prompts - "I have two select fields. I want to update the second drop-down list options to display only values that are under the selected first value. 
-//            How can I implement this when I am using SQL and HBS to display the choices? I want HBS to show the values when I do SELECT WHERE."
-//         - Reload fixes - JS script for fetch + JS Debugging
+// date: 12/01/2025
+// prompt - "How can I assign the old and new values (foreign keys) to be sent to my JS file? + Debugging"
 // Source URL: https://copilot.microsoft.com/
 
 // ########################################
