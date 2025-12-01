@@ -214,7 +214,7 @@ app.get('/reset', async function (req, res) {
        res.send(`
       <p>Reset successful! Reload in 2 seconds</p>
       <script>
-        setTimeout(() => { window.location.href = '/orders'; }, 2000);
+        setTimeout(() => { window.location.href = '/'; }, 2000);
       </script>
     `);
     } catch (error) {
