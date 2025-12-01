@@ -1,8 +1,9 @@
 // Citation for CS 340 Project - Group 28
-// Date: 11/06/2025
-// Adapted from and based on CS 340 - Exploration - Web Application Technology and Step 4 Draft
+// Date: 11/06/2025, 11/28/2025 (CUD)
+// Adapted from and based on CS 340 - Explorations - Web Application Technology and Implementing CUD operations in your app and Step 4 Draft
 // Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
 // Source URL (Step 4 Draft): https://canvas.oregonstate.edu/courses/2017561/assignments/10111742
+// Source URL (CUD): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25645149
 
 // AI tools were used: 
 // date: 11/13/2025
@@ -17,6 +18,12 @@
 // prompt - "how to check and make couponID as NULL if it's empty string in this code snippet in app.js?"
 // Source URL: https://copilot.microsoft.com/
 
+// date: 11/28/2025
+// prompts - "I have two select fields. I want to update the second drop-down list options to display only values that are under the selected first value. 
+//            How can I implement this when I am using SQL and HBS to display the choices? I want HBS to show the values when I do SELECT WHERE."
+//         - Reload fixes - JS script for fetch + JS Debugging
+// Source URL: https://copilot.microsoft.com/
+
 // ########################################
 // ########## SETUP
 
@@ -27,7 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const PORT = 13136;
+const PORT = 44028;
 
 // Database
 const db = require('./database/db-connector');
@@ -131,15 +138,14 @@ app.get('/bookorderdetails', async function (req, res) {
                         FROM BookOrderDetails \
                         INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID;`;
         const query2 = 'SELECT orderID FROM Orders;';
-        const query3 = 'SELECT bookID, title FROM Books;';
+
         const [bookOrderDetails] = await db.query(query1);
         const [orderID] = await db.query(query2);
-        const [books] = await db.query(query3);
 
         // Render the bookorderdetails.hbs file, and also send the renderer
         // an object that contains our bookOrderDetails information
         // showing book title instead of bookID
-        res.render('bookorderdetails', { bookOrderDetails: bookOrderDetails, orderID: orderID, books: books });
+        res.render('bookorderdetails', { bookOrderDetails: bookOrderDetails, orderID: orderID });
     } catch (error) {
         console.error('Error executing queries:', error);
         // Send a generic error message to the browser
@@ -147,6 +153,20 @@ app.get('/bookorderdetails', async function (req, res) {
             'An error occurred while executing the database queries.'
         );
     }
+});
+
+// Route for select bookID drop-down options, handles retrieval of bookID according to selected orderID, source: Copilot
+app.get('/bookorderdetails/get-books', async (req, res) => {
+    const selectedOrderID = req.query.orderID;
+    // SELECT depending on previously selected OrderID
+    const query3 = `
+      SELECT Books.bookID, title
+      FROM Books
+      INNER JOIN BookOrderDetails ON Books.bookID = BookOrderDetails.bookID
+      WHERE BookOrderDetails.orderID = ?;
+    `;
+    const [books] = await db.query(query3, [selectedOrderID]);
+    res.json(books);
 });
 
 app.get('/genres', async function (req, res) {
@@ -302,6 +322,40 @@ app.post('/orders/update', async function (req, res) {
         
         // Redirect back to the Orders page
         res.redirect('/orders');
+    } catch (error) {
+        console.error('Error executing PL/SQL:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the PL/SQL.'
+        );
+    }
+});
+
+app.post('/bookorderdetails/update', async function (req, res) {
+    try {
+        // Parse frontend form information
+        const data = req.body;
+
+        // Cleanse data - If the quantityOrdered or price aren't numbers, make them NULL.
+        if (isNaN(parseInt(data.update_bookorderdetails_quantityOrdered)))
+            data.update_bookorderdetails_quantityOrdered = null;
+        if (isNaN(parseInt(data.update_bookorderdetails_price)))
+            data.update_bookorderdetails_price = null;
+
+        // Create and execute our query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = 'CALL sp_UpdateBookOrderDetails(?, ?, ?, ?);';
+        await db.query(query1, [
+            data.update_bookorderdetails_orderID,
+            data.update_bookorderdetails_bookID,
+            data.update_bookorderdetails_quantityOrdered,
+            data.update_bookorderdetails_price
+        ]);
+
+        console.log(`UPDATE BookOrderDetails. Order ID: ${data.update_bookorderdetails_orderID} ` + `Book ID: ${data.update_bookorderdetails_bookID}`);
+
+        // Redirect the user to the updated webpage data
+        res.redirect('/bookorderdetails');
     } catch (error) {
         console.error('Error executing PL/SQL:', error);
         // Send a generic error message to the browser

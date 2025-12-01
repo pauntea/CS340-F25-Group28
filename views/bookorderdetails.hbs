@@ -1,8 +1,17 @@
 <!--
 Citation for CS 340 Project - Group 28
-Date: 11/06/2025
-Adapted from and based on CS 340 - Exploration - Web Application Technology
+Date: 11/06/2025 (Web Application), 1/28/2025 (CUD)
+Adapted from and based on CS 340 - Explorations - Web Application Technology and Implementing CUD operations in your app
 Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
+Source URL (CUD): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25645149
+
+// AI tools were used: 
+date: 11/28/2025
+prompts - "I have two select fields. I want to update the second drop-down list options to display only values that are under the selected first value. 
+           How can I implement this when I am using SQL and HBS to display the choices? I want HBS to show the values when I do SELECT WHERE."
+        - Reload fixes - JS script for fetch + JS Debugging
+Source URL: https://copilot.microsoft.com/
+
 !-->
 
 <h1>Book Order Details</h1>
@@ -35,7 +44,7 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
 
 {{! UPDATE form }}
 <h2>Update Book Order Details</h2>
-<form class='cuForm' id='update_bookOrderDetails_form'>
+<form class='cuForm' id='update_bookOrderDetails_form' method='POST' action='/bookorderdetails/update'>
     <label for='update_bookorderdetails_orderID'>Order ID:</label>
     <select name='update_bookorderdetails_orderID' id='update_bookorderdetails_orderID' required>
         <option value='' disabled selected>Select an order</option>
@@ -70,3 +79,22 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
     
     <input type='submit' />
 </form>
+
+{{! Script to update drop-down list options under bookID to reflect bookIDs under selected orderID, Source: Copilot}}
+<script>
+document.getElementById('update_bookorderdetails_orderID').addEventListener('change', function() {
+  const orderID = this.value;
+
+  fetch(`/bookorderdetails/get-books?orderID=${orderID}`)
+    .then(res => res.json())
+    .then(data => {
+      update_bookorderdetails_bookID.innerHTML = '';
+      data.forEach(book => {
+        const option = document.createElement('option');
+        option.value = book.bookID;
+        option.textContent = `${book.bookID} - ${book.title}`;
+        update_bookorderdetails_bookID.appendChild(option);
+      });
+    })
+});
+</script>

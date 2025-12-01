@@ -1,3 +1,8 @@
+-- Citation for CS 340 Project - Group 28
+-- Date: 11/28/2025
+-- Adapted from and based on CS 340 - Exploration - Implementing CUD operations in your app
+-- Source URL (CUD): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25645149
+
 -- Group 28 
 -- Kozy Nook’s Books Sales Management System
 -- Xichun Xu & Adrienne Jaimie Paunte
@@ -92,5 +97,25 @@ BEGIN
 
     COMMIT;
 
+END //
+DELIMITER ;
+
+
+-- #############################
+-- UPDATE book order detail
+-- #############################
+DROP PROCEDURE IF EXISTS sp_UpdateBookOrderDetails;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateBookOrderDetails(
+    IN p_orderID INT,
+    IN p_bookID INT,
+    IN p_quantityOrdered INT,
+    IN p_price DECIMAL(6,2))
+
+BEGIN
+    UPDATE BookOrderDetails 
+    SET orderID = p_orderID, bookID = p_bookID, quantityOrdered = p_quantityOrdered, price = p_price
+    WHERE orderID = p_orderID AND bookID = p_bookID;
 END //
 DELIMITER ;
