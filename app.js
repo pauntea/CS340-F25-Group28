@@ -22,6 +22,11 @@
 // prompt - "How can I assign the old and new values (foreign keys) to be sent to my JS file? + Debugging"
 // Source URL: https://copilot.microsoft.com/
 
+// date: 12/04/2025
+// prompt - "How can I make the dropdowns in my update form preselected with current value?"
+// Source URL: https://copilot.microsoft.com/
+
+
 // ########################################
 // ########## SETUP
 
@@ -32,14 +37,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const PORT = 44028;
+const PORT = 14146;
 
 // Database
 const db = require('./database/db-connector');
 
 // Handlebars
 const { engine } = require('express-handlebars'); // Import express-handlebars engine
-app.engine('.hbs', engine({ extname: '.hbs' })); // Create instance of handlebars
+app.engine('.hbs', engine({ 
+    extname: '.hbs',
+    helpers:{
+        eq: (a, b) => a === b
+    }
+})); // Create instance of handlebars and add eq helper
 app.set('view engine', '.hbs'); // Use handlebars engine for *.hbs files.
 
 // ########################################
@@ -99,8 +109,8 @@ app.get('/books', async function (req, res) {
 app.get('/orders', async function (req, res) {
     try {
         // Create and execute our queries
-        const query1 = `SELECT Orders.orderID, Users.userName AS user, Orders.orderDate, Orders.totalPrice, Orders.street, \
-                        Orders.city, Orders.state, Orders.zipCode, Coupons.couponCode AS couponCode \
+        const query1 = `SELECT Orders.orderID, Orders.userID, Users.userName AS user, Orders.orderDate, Orders.totalPrice, Orders.street, \
+                        Orders.city, Orders.state, Orders.zipCode, Orders.couponID, Coupons.couponCode AS couponCode \
                         FROM Orders \
                         INNER JOIN Users ON Orders.userID = Users.userID \
                         LEFT JOIN Coupons ON Orders.couponID = Coupons.couponID \
