@@ -34,6 +34,10 @@
 // prompt - "How can I enable selection of more than one book for one order? + Debugging"
 // Source URL: https://copilot.microsoft.com/
 
+// date: 12/05/2025
+// prompt - "Why is the trigger disappear after I reset the database? How can I make it persist?"
+// Source URL: https://copilot.microsoft.com/
+
 
 // ########################################
 // ########## SETUP
@@ -45,7 +49,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const PORT = 44028;
+const PORT = 14146;
 
 // Database
 const db = require('./database/db-connector');
@@ -216,8 +220,21 @@ app.get('/coupons', async function (req, res) {
 // RESET ROUTES
 app.get('/reset', async function (req, res) {
     try {
-        const query1 = 'CALL sp_load_bookstoredb();';
+      const query1 = 'CALL sp_load_bookstoredb();';
       await db.query(query1);
+      await db.query(`
+        CREATE TRIGGER trg_DeleteOrderIfNoDetails
+        AFTER DELETE ON BookOrderDetails
+        FOR EACH ROW
+        BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM BookOrderDetails WHERE orderID = OLD.orderID
+        ) THEN
+          DELETE FROM Orders WHERE orderID = OLD.orderID;
+        END IF;
+        END;
+    `);
+
        res.send(`
       <p>Reset successful! Reload in 2 seconds</p>
       <script>
@@ -289,6 +306,30 @@ app.post('/orders/create', async function (req, res) {
 
 
 // DELETE ROUTES
+app.post('/bookorderdetails/delete', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+        // Create and execute the query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_DeleteBookOrderDetail(?, ?);`;
+        await db.query(query1, [data.delete_order_id, data.delete_book_id]);
+
+        console.log(` Deleted bookOrderDetail with order. ID: ${data.delete_order_id} book. ID: ${data.delete_book_id} `);
+
+        // Redirect back to the Orders page
+        res.redirect('/bookorderdetails');
+    } catch (error) {
+        console.error('Error executing PL/SQL:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the PL/SQL.'
+        );
+    }
+});
+
+
 app.post('/orders/delete', async function (req, res) {
     try {
         // Parse frontend form information

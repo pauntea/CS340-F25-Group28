@@ -45,8 +45,15 @@ Source URL: https://copilot.microsoft.com/
             <td>{{this.quantityOrdered}}</td>
             <td>{{this.price}}</td>
 
-            {{! UPDATE - EDIT button }}
+            {{! DELETE form }}
             <td>
+              <form action="/bookorderdetails/delete" method="POST" style="display:inline;">
+                <input type="hidden" name="delete_order_id" value="{{this.orderID}}" />
+                <input type="hidden" name="delete_book_id" value="{{this.bookID}}" />
+                <button type="submit">Delete</button>
+              </form>
+
+            {{! UPDATE - EDIT button }}
             <button type="button" onclick="toggleUpdateForm('{{this.orderID}}-{{this.bookID}}')">Edit</button>
             </td>
         </tr>

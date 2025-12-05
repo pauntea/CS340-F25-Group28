@@ -16,10 +16,15 @@
 --           how can I update the foreign keys? I plan on picking the specific row to change via an inline edit button on a table."
 -- Source URL: https://copilot.microsoft.com/
 
+-- date: 12/05/2025
+-- prompt - "Help me write a trigger so that once a row under BookOrderDetails is deleted, it will search if there are more lines
+--           associated with the same orderID. If no more lines exist, then delete the order from Orders table as well to avoid orphan order record."
+-- Source URL: https://copilot.microsoft.com/
 
--- #############################
+
+-- ##########################################
 -- CREATE order
--- #############################
+-- ##########################################
 DROP PROCEDURE IF EXISTS sp_CreateOrder;
 
 DELIMITER //
@@ -46,9 +51,9 @@ END //
 DELIMITER ;
 
 
--- #############################
+-- ##########################################
 -- UPDATE order
--- #############################
+-- ##########################################
 DROP PROCEDURE IF EXISTS sp_UpdateOrder;
 
 DELIMITER //
@@ -73,9 +78,9 @@ END //
 DELIMITER ;
 
 
--- #############################
+-- ##########################################
 -- DELETE order
--- #############################
+-- ##########################################
 DROP PROCEDURE IF EXISTS sp_DeleteOrder;
 
 DELIMITER //
@@ -107,9 +112,10 @@ BEGIN
 END //
 DELIMITER ;
 
--- #############################
+
+-- ##########################################
 -- CREATE book order detail
--- #############################
+-- ##########################################
 DROP PROCEDURE IF EXISTS sp_CreateBookOrderDetails;
 
 DELIMITER //
@@ -125,9 +131,10 @@ BEGIN
 END //
 DELIMITER ;
 
--- #############################
+
+-- ##########################################
 -- UPDATE book order detail
--- #############################
+-- ##########################################
 DROP PROCEDURE IF EXISTS sp_UpdateBookOrderDetails;
 
 DELIMITER //
@@ -147,9 +154,68 @@ END //
 DELIMITER ;
 
 
--- #############################
+-- ##########################################
+-- DELETE book order detail
+-- ##########################################
+DROP PROCEDURE IF EXISTS sp_DeleteBookOrderDetail;
+
+DELIMITER //
+CREATE PROCEDURE sp_DeleteBookOrderDetail(IN p_orderID INT, IN p_bookID INT)
+BEGIN
+    DECLARE error_message VARCHAR(255); 
+
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propogate the custom error message to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+        DELETE FROM BookOrderDetails WHERE orderID = p_orderID AND bookID = p_bookID;
+    
+        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
+        IF ROW_COUNT() = 0 THEN
+            set error_message = CONCAT('No matching record found in orders for id: ', p_orderID);
+            -- Trigger custom error, invoke EXIT HANDLER
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        END IF;
+
+    COMMIT;
+
+END //
+DELIMITER ;
+
+
+-- ##########################################
+-- TRIGGER AFTER DELETE book order detail
+-- ##########################################
+DROP TRIGGER IF EXISTS trg_DeleteOrderIfNoDetails;
+DELIMITER //
+CREATE TRIGGER trg_DeleteOrderIfNoDetails
+AFTER DELETE ON BookOrderDetails
+FOR EACH ROW
+BEGIN
+    -- Check if the order still has any details left
+    IF NOT EXISTS (
+        SELECT 1
+        FROM BookOrderDetails
+        WHERE orderID = OLD.orderID
+    ) THEN
+        -- If no details remain, delete the order
+        DELETE FROM Orders
+        WHERE orderID = OLD.orderID;
+    END IF;
+END;
+//
+DELIMITER ;
+
+
+-- ##########################################
 -- RESET DB
--- #############################
+-- ##########################################
 DROP PROCEDURE IF EXISTS sp_load_bookstoredb;
 DELIMITER //
 CREATE PROCEDURE sp_load_bookstoredb()
