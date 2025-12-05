@@ -107,6 +107,23 @@ BEGIN
 END //
 DELIMITER ;
 
+-- #############################
+-- CREATE book order detail
+-- #############################
+DROP PROCEDURE IF EXISTS sp_CreateBookOrderDetails;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateBookOrderDetails(
+    IN p_bookID INT,
+    IN p_orderID INT,
+    IN p_quantityOrdered INT,
+    IN p_price DECIMAL(6,2))
+
+BEGIN
+    INSERT INTO BookOrderDetails (bookID, orderID, quantityOrdered, price) 
+    VALUES (p_bookID, p_orderID, p_quantityOrdered, p_price);
+END //
+DELIMITER ;
 
 -- #############################
 -- UPDATE book order detail
