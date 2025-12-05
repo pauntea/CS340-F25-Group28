@@ -14,6 +14,10 @@ Source URL: https://copilot.microsoft.com/
 // prompt - "How can I assign the old and new values (foreign keys) to be sent to my JS file? + Debugging"
 // Source URL: https://copilot.microsoft.com/
 
+// date: 12/04/2025
+// prompt - "How can I make the dropdowns in my update form preselected with current value?"
+// Source URL: https://copilot.microsoft.com/
+
 !-->
 
 <h1>Book Order Details</h1>
@@ -55,17 +59,21 @@ Source URL: https://copilot.microsoft.com/
                 <input type="hidden" name="old_orderID" value="{{this.orderID}}" required>
                 <input type="hidden" name="old_bookID" value="{{this.bookID}}" required>
 
-                <label>OrderID: </label>
-                <select name="update_bookorderdetails_orderID" required>
-                    {{#each ../orderID}}
-                    <option value="{{this.orderID}}">{{this.orderID}}</option>
-                    {{/each}}
-                </select><br>
-
                 <label>Book: </label>
                 <select name="update_bookorderdetails_bookID" required>
                     {{#each ../books}}
-                    <option value="{{this.bookID}}">{{this.title}} - {{this.bookID}}</option>
+                    <option value="{{this.bookID}}" {{#if (eq this.bookID ../bookID)}}selected{{/if}}>
+                        {{this.title}} - {{this.bookID}}
+                    </option>
+                    {{/each}}
+                </select><br>
+
+                <label>OrderID: </label>
+                <select name="update_bookorderdetails_orderID" required>
+                    {{#each ../orderID}}
+                    <option value="{{this.orderID}}" {{#if (eq this.orderID ../orderID)}}selected{{/if}}>
+                        {{this.orderID}}
+                    </option>
                     {{/each}}
                 </select><br>
 
