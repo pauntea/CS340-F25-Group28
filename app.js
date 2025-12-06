@@ -22,6 +22,23 @@
 // prompt - "How can I assign the old and new values (foreign keys) to be sent to my JS file? + Debugging"
 // Source URL: https://copilot.microsoft.com/
 
+// date: 12/04/2025
+// prompt - "How can I make the dropdowns in my update form preselected with current value?"
+// Source URL: https://copilot.microsoft.com/
+
+// date: 12/05/2025
+// prompt - "How can I make the create form insert both into Orders and BookOrderDetails tables in one submission? + Debugging"
+// Source URL: https://copilot.microsoft.com/
+
+// date: 12/05/2025
+// prompt - "How can I enable selection of more than one book for one order? + Debugging"
+// Source URL: https://copilot.microsoft.com/
+
+// date: 12/05/2025
+// prompt - "Why is the trigger disappear after I reset the database? How can I make it persist?"
+// Source URL: https://copilot.microsoft.com/
+
+
 // ########################################
 // ########## SETUP
 
@@ -32,14 +49,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const PORT = 44028;
+const PORT = 14146;
 
 // Database
 const db = require('./database/db-connector');
 
 // Handlebars
 const { engine } = require('express-handlebars'); // Import express-handlebars engine
-app.engine('.hbs', engine({ extname: '.hbs' })); // Create instance of handlebars
+app.engine('.hbs', engine({ 
+    extname: '.hbs',
+    helpers:{
+        eq: (a, b) => a === b
+    }
+})); // Create instance of handlebars and add eq helper
 app.set('view engine', '.hbs'); // Use handlebars engine for *.hbs files.
 
 // ########################################
@@ -99,17 +121,19 @@ app.get('/books', async function (req, res) {
 app.get('/orders', async function (req, res) {
     try {
         // Create and execute our queries
-        const query1 = `SELECT Orders.orderID, Users.userName AS user, Orders.orderDate, Orders.totalPrice, Orders.street, \
-                        Orders.city, Orders.state, Orders.zipCode, Coupons.couponCode AS couponCode \
+        const query1 = `SELECT Orders.orderID, Orders.userID, Users.userName AS user, Orders.orderDate, Orders.totalPrice, Orders.street, \
+                        Orders.city, Orders.state, Orders.zipCode, Orders.couponID, Coupons.couponCode AS couponCode \
                         FROM Orders \
                         INNER JOIN Users ON Orders.userID = Users.userID \
                         LEFT JOIN Coupons ON Orders.couponID = Coupons.couponID \
                         ORDER BY Orders.orderID;`;
         const query2 = 'SELECT userID, userName FROM Users;';
         const query3 = 'SELECT couponID, couponCode FROM Coupons;';
+        const query4 = 'SELECT bookID, title FROM Books;';
         const [orders] = await db.query(query1);
         const [users] = await db.query(query2);
         const [coupons] = await db.query(query3);
+        const [books] = await db.query(query4); 
 
 
         // Ensure date is a string like "YYYY-MM-DD"
@@ -119,7 +143,7 @@ app.get('/orders', async function (req, res) {
         // Render the orders.hbs file, and also send the renderer
         // an object that contains our orders information
         // showing userName instead of userID and couponCode instead of couponID
-        res.render('orders', { orders: orders, users: users, coupons: coupons });
+        res.render('orders', { orders: orders, users: users, coupons: coupons, books: books });
     } catch (error) {
         console.error('Error executing queries:', error);
         // Send a generic error message to the browser
@@ -134,7 +158,8 @@ app.get('/bookorderdetails', async function (req, res) {
         // Create and execute our queries
         const query1 = `SELECT Books.title AS book, BookOrderDetails.orderID, BookOrderDetails.bookID, BookOrderDetails.quantityOrdered, BookOrderDetails.price \
                         FROM BookOrderDetails \
-                        INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID;`;
+                        INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID \
+                        ORDER BY BookOrderDetails.orderID;`;
         const query2 = 'SELECT orderID FROM Orders;';
         const query3 = 'SELECT bookID, title FROM Books;';
 
@@ -195,8 +220,21 @@ app.get('/coupons', async function (req, res) {
 // RESET ROUTES
 app.get('/reset', async function (req, res) {
     try {
-        const query1 = 'CALL sp_load_bookstoredb();';
+      const query1 = 'CALL sp_load_bookstoredb();';
       await db.query(query1);
+      await db.query(`
+        CREATE TRIGGER trg_DeleteOrderIfNoDetails
+        AFTER DELETE ON BookOrderDetails
+        FOR EACH ROW
+        BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM BookOrderDetails WHERE orderID = OLD.orderID
+        ) THEN
+          DELETE FROM Orders WHERE orderID = OLD.orderID;
+        END IF;
+        END;
+    `);
+
        res.send(`
       <p>Reset successful! Reload in 2 seconds</p>
       <script>
@@ -225,7 +263,7 @@ app.post('/orders/create', async function (req, res) {
         // Create and execute the query
         // Using parameterized queries (Prevents SQL injection attacks)
         const query1 = `CALL sp_CreateOrder(?, ?, ?, ?, ?, ?, ?, ?, @new_id);`;
-
+        const query2 = `CALL sp_CreateBookOrderDetails(?, ?, ?, ?);`;
 
         // Store ID of last inserted row
         const [[[rows]]] = await db.query(query1, [
@@ -236,10 +274,24 @@ app.post('/orders/create', async function (req, res) {
             data.create_orders_city,
             data.create_orders_state,
             data.create_orders_zipCode,
-            data.create_orders_couponID,
+            data.create_orders_couponID
         ]);
 
-        console.log(` Created order. ID: ${rows.new_id} `);
+        // Insert multiple book details
+        const bookIDs = data.create_bookorderdetails_bookID;
+        const quantities = data.create_bookorderdetails_quantityOrdered;
+        const prices = data.create_bookorderdetails_price;
+
+        for (let i = 0; i < bookIDs.length; i++) {
+            await db.query(query2,[
+            bookIDs[i],
+            rows.new_id,
+            quantities[i],
+            prices[i]
+        ]);
+        }
+
+        console.log(` Created order & book order detail. ID: ${rows.new_id} `);
         
         // Redirect back to the Orders page
         res.redirect('/orders');
@@ -254,6 +306,30 @@ app.post('/orders/create', async function (req, res) {
 
 
 // DELETE ROUTES
+app.post('/bookorderdetails/delete', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+        // Create and execute the query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_DeleteBookOrderDetail(?, ?);`;
+        await db.query(query1, [data.delete_order_id, data.delete_book_id]);
+
+        console.log(` Deleted bookOrderDetail with order. ID: ${data.delete_order_id} book. ID: ${data.delete_book_id} `);
+
+        // Redirect back to the Orders page
+        res.redirect('/bookorderdetails');
+    } catch (error) {
+        console.error('Error executing PL/SQL:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the PL/SQL.'
+        );
+    }
+});
+
+
 app.post('/orders/delete', async function (req, res) {
     try {
         // Parse frontend form information

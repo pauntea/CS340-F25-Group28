@@ -34,7 +34,8 @@ ORDER BY Orders.orderID;
 -- get all records from BookOrderDetails table, showing book title instead of book Id
 SELECT Books.title AS book, BookOrderDetails.orderID, BookOrderDetails.quantityOrdered, BookOrderDetails.price
 FROM BookOrderDetails
-INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID;
+INNER JOIN Books ON BookOrderDetails.bookID = Books.bookID
+ORDER BY BookOrderDetails.orderID;
 
 
 -- --------------------------------------------------------
@@ -53,6 +54,7 @@ SELECT bookID, title FROM Books;
 -- get all orderID to populate the orderID dropdown under BookOrderDetails
 SELECT orderID FROM Orders;
 
+
 -- --------------------------------------------------------
 -- CREATE OPERATION for Orders
 -- : denotes a parameter to be provided by the user
@@ -60,6 +62,14 @@ SELECT orderID FROM Orders;
 INSERT INTO Orders (userID, orderDate, totalPrice, street, city, state, zipCode, couponID) 
     VALUES (:userID_Input, :orderDate_Input, :totalPrice_Input, :street_Input, :city_Input, 
             :state_Input, :zipCode_Input, :couponID_Input);
+
+
+-- --------------------------------------------------------
+-- CREATE OPERATION for BookOrderDetails
+-- : denotes a parameter to be provided by the user
+-- --------------------------------------------------------
+INSERT INTO BookOrderDetails (bookID, orderID, quantity, price) 
+    VALUES (:bookID_Input, :orderID_Input, :quantity_Input, :price_Input);
 
 
 -- --------------------------------------------------------
@@ -87,3 +97,10 @@ WHERE bookID = :bookID_selected_from_BookOrderDetails_update_form
 -- --------------------------------------------------------
 DELETE FROM Orders
 WHERE orderID = :orderID_selected_from_browse_Orders_page;
+
+
+-- --------------------------------------------------------
+-- DELETE OPERATION for bookOrderDetails
+-- --------------------------------------------------------
+DELETE FROM BookOrderDetails
+WHERE orderID = :orderID_selected_from_browse_Orders_page AND bookID = :bookID_selected_from_browse_BookOrderDetails_page;

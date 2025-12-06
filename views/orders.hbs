@@ -10,10 +10,22 @@ date: 12/1/2025
 prompts - "how to make the update form inline in this hbs document so that once an "EDIT" button is hit, an update form for that line will show up right below it?"
 Source URL: https://copilot.microsoft.com/
 
+// date: 12/04/2025
+// prompt - "How can I make the dropdowns in my update form preselected with current value?"
+// Source URL: https://copilot.microsoft.com/
+
+// date: 12/05/2025
+// prompt - "How can I make the create form insert both into Orders and BookOrderDetails tables in one submission?"
+// Source URL: https://copilot.microsoft.com/
+
+// date: 12/05/2025
+// prompt - "How can I enable selection of more than one book for one order?"
+// Source URL: https://copilot.microsoft.com/
+
 !-->
 
 <h1>Orders</h1>
-<h2>View, Delete, Create, and Update Orders</h2>
+<h2>View, Delete and Update Orders</h2>
 
 {{! READ table }}
 <table>
@@ -52,7 +64,7 @@ Source URL: https://copilot.microsoft.com/
           <button type="submit">Delete</button>
         </form>
 
-        {{! EDIT button }}
+      {{! EDIT button }}
         <button type="button" onclick="toggleUpdateForm('{{this.orderID}}')">Edit</button>
       </td>
     </tr>
@@ -66,7 +78,10 @@ Source URL: https://copilot.microsoft.com/
           <label>User:</label>
           <select name="update_orders_userID" required>
             {{#each ../users}}
-            <option value="{{this.userID}}">{{this.userID}} - {{this.userName}}</option>
+            <option value="{{this.userID}}"
+              {{#if (eq this.userID ../userID)}}selected{{/if}}>
+              {{this.userID}} - {{this.userName}}
+            </option>
             {{/each}}
           </select><br>
 
@@ -93,7 +108,10 @@ Source URL: https://copilot.microsoft.com/
             <option value="">Select a Coupon</option>
             <option value="">No Coupon</option>
             {{#each ../coupons}}
-            <option value="{{this.couponID}}">{{this.couponID}} - {{this.couponCode}}</option>
+            <option value="{{this.couponID}}"
+            {{#if (eq this.couponID ../couponID)}}selected{{/if}}>
+              {{this.couponID}} - {{this.couponCode}}
+            </option>
             {{/each}}
           </select><br>
 
@@ -105,9 +123,13 @@ Source URL: https://copilot.microsoft.com/
   </tbody>
 </table>
 
-{{! CREATE form stays separate }}
-<h2>Create an Order</h2>
+{{! CREATE form}}
+<h2>Create an Order and BookOrderDetail</h2>
 <form class="cuForm" id="create_orders_form" method="POST" action="/orders/create">
+  
+  {{! Order fields }}
+  <h3>Order</h3>
+  
   <label for="create_orders_userID">User: </label>
   <select name="create_orders_userID" id="create_orders_userID" required>
     <option value="" disabled selected>Select a User</option>
@@ -142,12 +164,36 @@ Source URL: https://copilot.microsoft.com/
     <option value="{{this.couponID}}">{{this.couponID}} - {{this.couponCode}}</option>
     {{/each}}
   </select><br>
+  
+  {{! BookOrderDetails fields }}
+  <h3>Book Order Detail</h3>
+  
+  <div id="bookItems">
+    <div class="bookItem">
+      <label for="create_bookorderdetails_bookID">Book: </label>
+      <select name="create_bookorderdetails_bookID[]" required>
+        <option value="" disabled selected>Select a Book</option>
+        {{#each books}}
+        <option value="{{this.bookID}}">{{this.bookID}} - {{this.title}}</option>
+        {{/each}}
+      </select><br>
+      
+      <label for="create_bookorderdetails_quantityOrdered">Quantity: </label>
+      <input type="number" name="create_bookorderdetails_quantityOrdered[]" min="0"  required/><br>
+      
+      <label for="create_bookorderdetails_price">Price: </label>
+      <input type="number" step="0.01" name="create_bookorderdetails_price[]" min="0"  required/><br>
+    </div>
+  </div>
+
+  <button type="button" onclick="addBookItem()">Add Another Book</button><br><br>
 
   <input type="submit" />
 </form>
 
 {{! JavaScript toggle function }}
 <script>
+
 function toggleUpdateForm(orderID) {
   // Close all other update forms first
   document.querySelectorAll("[id^='updateFormRow-']").forEach(row => {
@@ -160,4 +206,11 @@ function toggleUpdateForm(orderID) {
     row.style.display = "table-row";
   }
 }
+
+function addBookItem() {
+  const container = document.getElementById('bookItems');
+  const newItem = container.firstElementChild.cloneNode(true);
+  container.appendChild(newItem);
+}
+
 </script>
