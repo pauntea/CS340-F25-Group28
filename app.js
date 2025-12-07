@@ -49,7 +49,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const PORT = 14146;
+const PORT = 44028;
 
 // Database
 const db = require('./database/db-connector');
@@ -103,12 +103,15 @@ app.get('/books', async function (req, res) {
                         Books.quantity, Books.price, Books.totalSold, Books.description \
                         FROM Books \
                         INNER JOIN Genres ON Books.genreID = Genres.genreID;`;
+        const query2 = 'SELECT genreID, genre FROM Genres;';
+        
         const [books] = await db.query(query1);
+        const [genres] = await db.query(query2);
 
         // Render the books.hbs file, and also send the renderer
         // an object that contains our books information
         // showing genre instead of genreID
-        res.render('books', { books: books });
+        res.render('books', { books: books, genres: genres });
     } catch (error) {
         console.error('Error executing queries:', error);
         // Send a generic error message to the browser
@@ -263,7 +266,7 @@ app.post('/orders/create', async function (req, res) {
         // Create and execute the query
         // Using parameterized queries (Prevents SQL injection attacks)
         const query1 = `CALL sp_CreateOrder(?, ?, ?, ?, ?, ?, ?, ?, @new_id);`;
-        const query2 = `CALL sp_CreateBookOrderDetails(?, ?, ?, ?);`;
+        const query2 = `CALL sp_CreateBookOrderDetail(?, ?, ?, ?);`;
 
         // Store ID of last inserted row
         const [[[rows]]] = await db.query(query1, [
@@ -304,6 +307,50 @@ app.post('/orders/create', async function (req, res) {
     }
 });
 
+app.post('/books/create', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+        // Cleanse data - If the genreID, quantity, or totalSold aren't numbers, make them NULL.
+        if (isNaN(parseInt(data.create_books_genreID)))
+            data.create_books_genreID = null;
+        if (isNaN(parseInt(data.create_books_quantity)))
+            data.create_books_quantity = null;
+        if (isNaN(parseInt(data.create_books_totalSold)))
+            data.create_books_totalSold = null;
+
+        // Create and execute our queries
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_CreateBook(?, ?, ?, ?, ?, ?, ?, ?, @new_bookID);`;
+
+        // Store ID of last inserted row
+        const [[[rows]]] = await db.query(query1, [
+            data.create_books_genreID,
+            data.create_books_title,
+            data.create_books_author,
+            data.create_books_isbn,
+            data.create_books_quantity,
+            data.create_books_price,
+            data.create_books_totalSold,
+            data.create_books_description
+        ]);
+
+        console.log(`CREATE Books. Book ID: ${rows.new_bookID} ` +
+            `Title: ${data.create_books_title}`
+        );
+
+        // Redirect the user to the updated webpage
+        res.redirect('/books');
+    } catch (error) {
+        console.error('Error executing PL/SQL:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the PL/SQL.'
+        );
+    }
+});
+
 
 // DELETE ROUTES
 app.post('/bookorderdetails/delete', async function (req, res) {
@@ -329,7 +376,6 @@ app.post('/bookorderdetails/delete', async function (req, res) {
     }
 });
 
-
 app.post('/orders/delete', async function (req, res) {
     try {
         // Parse frontend form information
@@ -344,6 +390,31 @@ app.post('/orders/delete', async function (req, res) {
 
         // Redirect back to the Orders page
         res.redirect('/orders');
+    } catch (error) {
+        console.error('Error executing PL/SQL:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the PL/SQL.'
+        );
+    }
+});
+
+app.post('/books/delete', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+
+        // Create and execute our query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_DeleteBook(?);`;
+        await db.query(query1, [data.delete_books_bookID]);
+
+        console.log(`DELETE bsg-people. Book ID: ${data.delete_books_bookID} ` +
+            `Title: ${data.delete_books_title}`
+        );
+
+        // Redirect the user to the updated webpage data
+        res.redirect('/books');
     } catch (error) {
         console.error('Error executing PL/SQL:', error);
         // Send a generic error message to the browser
@@ -406,7 +477,7 @@ app.post('/bookorderdetails/update', async function (req, res) {
 
         // Create and execute our query
         // Using parameterized queries (Prevents SQL injection attacks)
-        const query1 = 'CALL sp_UpdateBookOrderDetails(?, ?, ?, ?, ?, ?);';
+        const query1 = 'CALL sp_UpdateBookOrderDetail(?, ?, ?, ?, ?, ?);';
         await db.query(query1, [
             data.old_orderID,
             data.old_bookID,
@@ -420,6 +491,49 @@ app.post('/bookorderdetails/update', async function (req, res) {
 
         // Redirect the user to the updated webpage data
         res.redirect('/bookorderdetails');
+    } catch (error) {
+        console.error('Error executing PL/SQL:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the PL/SQL.'
+        );
+    }
+});
+
+app.post('/books/update', async function (req, res) {
+    try {
+        // Parse frontend form information
+        const data = req.body;
+
+        // Cleanse data - If the genreID, quantity, or totalSold aren't numbers, make them NULL.
+        if (isNaN(parseInt(data.update_books_genreID)))
+            data.update_books_genreID = null;
+        if (isNaN(parseInt(data.update_books_quantity)))
+            data.update_books_quantity = null;
+        if (isNaN(parseInt(data.update_books_totalSold)))
+            data.update_books_totalSold = null;
+
+        // Create and execute our query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = 'CALL sp_UpdateBook(?, ?, ?, ?, ?, ?, ?, ?, ?);';
+        await db.query(query1, [
+            data.update_books_bookID,
+            data.update_books_genreID,
+            data.update_books_title,
+            data.update_books_author,
+            data.update_books_isbn,
+            data.update_books_quantity,
+            data.update_books_price,
+            data.update_books_totalSold,
+            data.update_books_description
+        ]);
+
+        console.log(`UPDATE Books. Book ID: ${data.update_books_bookID} ` +
+            `Title: ${data.update_books_title}`
+        );
+
+        // Redirect the user to the updated webpage data
+        res.redirect('/books');
     } catch (error) {
         console.error('Error executing PL/SQL:', error);
         // Send a generic error message to the browser
