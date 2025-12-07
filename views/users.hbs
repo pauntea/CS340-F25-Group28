@@ -1,8 +1,14 @@
 <!--
 Citation for CS 340 Project - Group 28
-Date: 11/06/2025
-Adapted from and based on CS 340 - Exploration - Web Application Technology
+Date: 11/06/2025 (Web Application), 12/06/2025 (CUD)
+Adapted from and based on CS 340 - Explorations - Web Application Technology and Implementing CUD operations in your app
 Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
+Source URL (CUD): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25645149
+
+AI tools were used: 
+date: 12/01/2025
+prompts - "how to make the update form inline in this hbs document so that once an "EDIT" button is hit, an update form for that line will show up right below it?"
+Source URL: https://copilot.microsoft.com/
 !-->
 
 <h1>Users</h1>
@@ -17,6 +23,7 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
             <th>User Name</th>
             <th>Email</th>
             <th>Phone Number</th>
+            <th>Actions</th>
         </tr>
     </thead>
 
@@ -28,7 +35,71 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
             <td>{{this.userName}}</td>
             <td>{{this.email}}</td>
             <td>{{this.phoneNumber}}</td>
+
+            {{! DELETE form }}
+            <td>
+              <form action="/users/delete" method="POST" style="display:inline;">
+                <input type="hidden" name="delete_users_userID" value="{{this.userID}}" />
+                <button type="submit">Delete</button>
+              </form>
+
+            {{! UPDATE - EDIT button }}
+            <button type="button" onclick="toggleUpdateForm('{{this.userID}}')">Edit</button>
+            </td>
+        </tr>
+
+        {{! Hidden UPDATE form row }}
+        <tr id="updateFormRow-{{this.userID}}" style="display:none;">
+            <td colspan="11">
+                <form action="/users/update" method="POST">
+                    <input type="hidden" name="update_users_userID" value="{{this.userID}}" required>
+
+                    <label for='update_users_userName'>User Name: </label>
+                    <input type="text" name="update_users_userName" maxlength="100" value="{{this.userName}}"/><br>
+
+                    <label for='update_users_email'>Email: </label>
+                    <input type="text" name="update_users_email" maxlength="320" value="{{this.email}}"/><br>
+
+                    <label for='update_users_phoneNumber'>Phone Number: </label>
+                    <input type="text" name="update_users_phoneNumber" maxlength="10" value="{{this.phoneNumber}}"/><br>
+                    
+                    <input type="submit" value="Save Update" />
+                </form>
+            </td>
         </tr>
         {{/each}}
     </tbody>
 </table>
+
+{{! CREATE form}}
+<h2>Create a User</h2>
+    <form class="cuForm" id="create_users_form" method="POST" action="/users/create">
+
+    <label for='create_users_userName'>User Name: </label>
+    <input type="text" name="create_users_userName" maxlength="100" value="{{this.userName}}"/><br>
+
+    <label for='create_users_email'>Email: </label>
+    <input type="text" name="create_users_email" maxlength="320" value="{{this.email}}"/><br>
+
+    <label for='create_users_phoneNumber'>Phone Number: </label>
+    <input type="text" name="create_users_phoneNumber" maxlength="10" value="{{this.phoneNumber}}"/><br>
+
+    <input type="submit" value="Submit" />
+    <br>
+</form>
+
+{{! JavaScript toggle function, Source: Copilot }}
+<script>
+function toggleUpdateForm(id) {
+  // Hide all update forms
+  document.querySelectorAll("[id^='updateFormRow-']").forEach(row => {
+    row.style.display = "none";
+  });
+
+  // Show the selected form
+  const row = document.getElementById("updateFormRow-" + id);
+  if (row) {
+    row.style.display = "table-row";
+  }
+}
+</script>

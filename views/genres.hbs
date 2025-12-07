@@ -1,8 +1,14 @@
 <!--
 Citation for CS 340 Project - Group 28
-Date: 11/06/2025
-Adapted from and based on CS 340 - Exploration - Web Application Technology
+Date: 11/06/2025 (Web Application), 12/06/2025 (CUD)
+Adapted from and based on CS 340 - Explorations - Web Application Technology and Implementing CUD operations in your app
 Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
+Source URL (CUD): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25645149
+
+AI tools were used: 
+date: 12/01/2025
+prompts - "how to make the update form inline in this hbs document so that once an "EDIT" button is hit, an update form for that line will show up right below it?"
+Source URL: https://copilot.microsoft.com/
 !-->
 
 <h1>Genres</h1>
@@ -15,6 +21,7 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
         <tr>
             <th>Genre ID</th>
             <th>Genre</th>
+            <th>Actions</th>
         </tr>
     </thead>
 
@@ -24,7 +31,60 @@ Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pag
         <tr>
             <td>{{this.genreID}}</td>
             <td>{{this.genre}}</td>
+
+            {{! DELETE form }}
+            <td>
+              <form action="/genres/delete" method="POST" style="display:inline;">
+                <input type="hidden" name="delete_genres_genreID" value="{{this.genreID}}" />
+                <button type="submit">Delete</button>
+              </form>
+
+            {{! UPDATE - EDIT button }}
+            <button type="button" onclick="toggleUpdateForm('{{this.genreID}}')">Edit</button>
+            </td>
+        </tr>
+
+        {{! Hidden UPDATE form row }}
+        <tr id="updateFormRow-{{this.genreID}}" style="display:none;">
+            <td colspan="11">
+                <form action="/genres/update" method="POST">
+                    <input type="hidden" name="update_genres_genreID" value="{{this.genreID}}" required>
+
+                    <label for='update_genres_genre'>Genre: </label>
+                    <input type="text" name="update_genres_genre" maxlength="50" value="{{this.genre}}"/><br>
+                    <br>
+                    
+                    <input type="submit" value="Save Update" />
+                </form>
+            </td>
         </tr>
         {{/each}}
     </tbody>
 </table>
+
+{{! CREATE form}}
+<h2>Create a Genre</h2>
+<form class="cuForm" id="create_genres_form" method="POST" action="/genres/create">
+    <label for='create_genres_genre'>Genre: </label>
+    <input type="text" name="create_genres_genre" maxlength="50" value="{{this.genre}}"/><br>
+    <br>
+
+    <input type="submit" value="Submit" />
+    <br>
+</form>
+
+{{! JavaScript toggle function, Source: Copilot }}
+<script>
+function toggleUpdateForm(id) {
+  // Hide all update forms
+  document.querySelectorAll("[id^='updateFormRow-']").forEach(row => {
+    row.style.display = "none";
+  });
+
+  // Show the selected form
+  const row = document.getElementById("updateFormRow-" + id);
+  if (row) {
+    row.style.display = "table-row";
+  }
+}
+</script>

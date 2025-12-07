@@ -22,6 +22,164 @@
 -- Source URL: https://copilot.microsoft.com/
 
 
+-- #############################
+-- CREATE user
+-- #############################
+DROP PROCEDURE IF EXISTS sp_CreateUser;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateUser(
+    IN p_userName VARCHAR(100),
+    IN p_email VARCHAR(320),
+    IN p_phoneNumber VARCHAR(10),
+    OUT p_userID INT)
+BEGIN
+    INSERT INTO Users (userName, email, phoneNumber) VALUES (p_userName, p_email, p_phoneNumber);
+
+    -- Store the ID of the last inserted row
+    SELECT LAST_INSERT_ID() into p_userID;
+    -- Display the ID of the last inserted user.
+    SELECT LAST_INSERT_ID() AS 'new_userID';
+
+END //
+DELIMITER ;
+
+
+-- #############################
+-- DELETE user
+-- #############################
+DROP PROCEDURE IF EXISTS sp_DeleteUser;
+
+DELIMITER //
+CREATE PROCEDURE sp_DeleteUser(IN p_userID INT)
+BEGIN
+    DECLARE error_message VARCHAR(255); 
+
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propogate the custom error message to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+        -- Deleting corresponding rows from Orders to prevent a data anamoly
+        DELETE FROM Orders WHERE userID = p_userID;
+
+        DELETE FROM Users WHERE userID = p_userID;
+
+        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
+        IF ROW_COUNT() = 0 THEN
+            set error_message = CONCAT('No matching record found in Users for id: ', p_userID);
+            -- Trigger custom error, invoke EXIT HANDLER
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        END IF;
+
+    COMMIT;
+
+END //
+DELIMITER ;
+
+
+-- #############################
+-- UPDATE user
+-- #############################
+DROP PROCEDURE IF EXISTS sp_UpdateUser;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateUser(IN p_userID INT, IN p_userName VARCHAR(100), IN p_email VARCHAR(320), IN p_phoneNumber VARCHAR(10))
+
+BEGIN
+    UPDATE Users SET userName = p_userName, email = p_email, phoneNumber = p_phoneNumber WHERE userID = p_userID; 
+END //
+DELIMITER ;
+
+
+-- #############################
+-- CREATE book
+-- #############################
+DROP PROCEDURE IF EXISTS sp_CreateBook;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateBook(
+    IN p_genreID INT,
+    IN p_title VARCHAR(200),
+    IN p_author VARCHAR(100),
+    IN p_isbn VARCHAR(13),
+    IN p_quantity INT,
+    IN p_price DECIMAL(6,2),
+    IN p_totalSold INT,
+    IN p_description VARCHAR(5000),
+    OUT p_bookID INT)
+BEGIN
+    INSERT INTO Books (genreID, title, author, isbn, quantity, price, totalSold, description) 
+    VALUES (p_genreID, p_title, p_author, p_isbn, p_quantity, p_price, p_totalSold, p_description);
+
+    -- Store the ID of the last inserted row
+    SELECT LAST_INSERT_ID() into p_bookID;
+    -- Display the ID of the last inserted book.
+    SELECT LAST_INSERT_ID() AS 'new_bookID';
+
+END //
+DELIMITER ;
+
+
+-- #############################
+-- DELETE book
+-- #############################
+DROP PROCEDURE IF EXISTS sp_DeleteBook;
+
+DELIMITER //
+CREATE PROCEDURE sp_DeleteBook(IN p_bookID INT)
+BEGIN
+    DECLARE error_message VARCHAR(255); 
+
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propogate the custom error message to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+        -- Deleting corresponding rows from BookOrderDetails to prevent a data anamoly
+        DELETE FROM BookOrderDetails WHERE bookID = p_bookID;
+
+        DELETE FROM Books WHERE bookID = p_bookID;
+
+        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
+        IF ROW_COUNT() = 0 THEN
+            set error_message = CONCAT('No matching record found in Books for id: ', p_bookID);
+            -- Trigger custom error, invoke EXIT HANDLER
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        END IF;
+
+    COMMIT;
+
+END //
+DELIMITER ;
+
+
+-- #############################
+-- UPDATE book
+-- #############################
+DROP PROCEDURE IF EXISTS sp_UpdateBook;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateBook(IN p_bookID INT, IN p_genreID INT, IN p_title VARCHAR(200), IN p_author VARCHAR(100), IN p_isbn VARCHAR(13),
+                                IN p_quantity INT, IN p_price DECIMAL(6,2), IN p_totalSold INT, IN p_description VARCHAR(5000))
+
+BEGIN
+    UPDATE Books SET genreID = p_genreID, title = p_title, author = p_author, isbn = p_isbn, quantity = p_quantity,
+                     price = p_price, totalSold = p_totalSold, description = p_description WHERE bookID = p_bookID; 
+END //
+DELIMITER ;
+
+
 -- ##########################################
 -- CREATE order
 -- ##########################################
@@ -102,7 +260,7 @@ BEGIN
     
         -- ROW_COUNT() returns the number of rows affected by the preceding statement.
         IF ROW_COUNT() = 0 THEN
-            set error_message = CONCAT('No matching record found in orders for id: ', p_orderID);
+            set error_message = CONCAT('No matching record found in Orders for id: ', p_orderID);
             -- Trigger custom error, invoke EXIT HANDLER
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
         END IF;
@@ -178,13 +336,162 @@ BEGIN
     
         -- ROW_COUNT() returns the number of rows affected by the preceding statement.
         IF ROW_COUNT() = 0 THEN
-            set error_message = CONCAT('No matching record found in orders for id: ', p_orderID);
+            set error_message = CONCAT('No matching record found in BookOrderDetails for orderID: ', p_orderID, ' and bookID: ', p_bookID);
             -- Trigger custom error, invoke EXIT HANDLER
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
         END IF;
 
     COMMIT;
 
+END //
+DELIMITER ;
+
+
+-- #############################
+-- CREATE genre
+-- #############################
+DROP PROCEDURE IF EXISTS sp_CreateGenre;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateGenre(
+    IN p_genre VARCHAR(50),
+    OUT p_genreID INT)
+BEGIN
+    INSERT INTO Genres (genre) 
+    VALUES (p_genre);
+
+    -- Store the ID of the last inserted row
+    SELECT LAST_INSERT_ID() into p_genreID;
+    -- Display the ID of the last inserted genre.
+    SELECT LAST_INSERT_ID() AS 'new_genreID';
+
+END //
+DELIMITER ;
+
+
+-- #############################
+-- DELETE genre
+-- #############################
+DROP PROCEDURE IF EXISTS sp_DeleteGenre;
+
+DELIMITER //
+CREATE PROCEDURE sp_DeleteGenre(IN p_genreID INT)
+BEGIN
+    DECLARE error_message VARCHAR(255); 
+
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propogate the custom error message to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+        -- Updating corresponding rows from Books to prevent a data anamoly
+        UPDATE Books SET genreID = NULL WHERE genreID = p_genreID;
+
+        DELETE FROM Genres WHERE genreID = p_genreID;
+
+        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
+        IF ROW_COUNT() = 0 THEN
+            set error_message = CONCAT('No matching record found in Genres for id: ', p_genreID);
+            -- Trigger custom error, invoke EXIT HANDLER
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        END IF;
+
+    COMMIT;
+
+END //
+DELIMITER ;
+
+
+-- #############################
+-- UPDATE genre
+-- #############################
+DROP PROCEDURE IF EXISTS sp_UpdateGenre;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateGenre(IN p_genreID INT, IN p_genre VARCHAR(50))
+
+BEGIN
+    UPDATE Genres SET genre = p_genre WHERE genreID = p_genreID; 
+END //
+DELIMITER ;
+
+
+-- #############################
+-- CREATE coupon
+-- #############################
+DROP PROCEDURE IF EXISTS sp_CreateCoupon;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateCoupon(
+    IN p_couponCode VARCHAR(50),
+    IN p_discountType ENUM('VALUE', 'PERCENTAGE'),
+    IN p_discount INT,
+    OUT p_couponID INT)
+BEGIN
+    INSERT INTO Coupons (couponCode, discountType, discount) VALUES (p_couponCode, p_discountType, p_discount);
+
+    -- Store the ID of the last inserted row
+    SELECT LAST_INSERT_ID() into p_couponID;
+    -- Display the ID of the last inserted book.
+    SELECT LAST_INSERT_ID() AS 'new_couponID';
+
+END //
+DELIMITER ;
+
+
+-- #############################
+-- DELETE coupon
+-- #############################
+DROP PROCEDURE IF EXISTS sp_DeleteCoupon;
+
+DELIMITER //
+CREATE PROCEDURE sp_DeleteCoupon(IN p_couponID INT)
+BEGIN
+    DECLARE error_message VARCHAR(255); 
+
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propogate the custom error message to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+        -- Updating corresponding rows from Orders to prevent a data anamoly
+        UPDATE Orders SET couponID = NULL WHERE couponID = p_couponID; 
+
+        DELETE FROM Coupons WHERE couponID = p_couponID;
+
+        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
+        IF ROW_COUNT() = 0 THEN
+            set error_message = CONCAT('No matching record found in Coupons for id: ', p_couponID);
+            -- Trigger custom error, invoke EXIT HANDLER
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        END IF;
+
+    COMMIT;
+
+END //
+DELIMITER ;
+
+
+-- #############################
+-- UPDATE coupon
+-- #############################
+DROP PROCEDURE IF EXISTS sp_UpdateCoupon;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateCoupon(IN p_couponID INT, IN p_couponCode VARCHAR(50), IN p_discountType ENUM('VALUE', 'PERCENTAGE'), IN p_discount INT)
+
+BEGIN
+    UPDATE Coupons SET couponCode = p_couponCode, discountType = p_discountType, discount = p_discount WHERE couponID = p_couponID; 
 END //
 DELIMITER ;
 
@@ -208,87 +515,6 @@ BEGIN
         DELETE FROM Orders
         WHERE orderID = OLD.orderID;
     END IF;
-END //
-DELIMITER ;
-
-
--- #############################
--- CREATE book
--- #############################
-DROP PROCEDURE IF EXISTS sp_CreateBook;
-
-DELIMITER //
-CREATE PROCEDURE sp_CreateBook(
-    IN p_genreID INT,
-    IN p_title VARCHAR(200),
-    IN p_author VARCHAR(100),
-    IN p_isbn VARCHAR(13),
-    IN p_quantity INT,
-    IN p_price DECIMAL(6,2),
-    IN p_totalSold INT,
-    IN p_description VARCHAR(5000),
-    OUT p_bookID INT)
-BEGIN
-    INSERT INTO Books (genreID, title, author, isbn, quantity, price, totalSold, description) 
-    VALUES (p_genreID, p_title, p_author, p_isbn, p_quantity, p_price, p_totalSold, p_description);
-
-    -- Store the ID of the last inserted row
-    SELECT LAST_INSERT_ID() into p_bookID;
-    -- Display the ID of the last inserted book.
-    SELECT LAST_INSERT_ID() AS 'new_bookID';
-
-END //
-DELIMITER ;
-
--- #############################
--- DELETE book
--- #############################
-DROP PROCEDURE IF EXISTS sp_DeleteBook;
-
-DELIMITER //
-CREATE PROCEDURE sp_DeleteBook(IN p_bookID INT)
-BEGIN
-    DECLARE error_message VARCHAR(255); 
-
-    -- error handling
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        -- Roll back the transaction on any error
-        ROLLBACK;
-        -- Propogate the custom error message to the caller
-        RESIGNAL;
-    END;
-
-    START TRANSACTION;
-        -- Deleting corresponding rows from BookOrderDetails to prevent a data anamoly
-        DELETE FROM BookOrderDetails WHERE bookID = p_bookID;
-
-        DELETE FROM Books WHERE bookID = p_bookID;
-
-        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
-        IF ROW_COUNT() = 0 THEN
-            set error_message = CONCAT('No matching record found in Books for id: ', p_bookID);
-            -- Trigger custom error, invoke EXIT HANDLER
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
-        END IF;
-
-    COMMIT;
-
-END //
-DELIMITER ;
-
--- #############################
--- UPDATE bsg_people
--- #############################
-DROP PROCEDURE IF EXISTS sp_UpdateBook;
-
-DELIMITER //
-CREATE PROCEDURE sp_UpdateBook(IN p_bookID INT, IN p_genreID INT, IN p_title VARCHAR(200), IN p_author VARCHAR(100), IN p_isbn VARCHAR(13),
-                                IN p_quantity INT, IN p_price DECIMAL(6,2), IN p_totalSold INT, IN p_description VARCHAR(5000))
-
-BEGIN
-    UPDATE Books SET genreID = p_genreID, title = p_title, author = p_author, isbn = p_isbn, quantity = p_quantity,
-                     price = p_price, totalSold = p_totalSold, description = p_description WHERE bookID = p_bookID; 
 END //
 DELIMITER ;
 
