@@ -116,10 +116,10 @@ DELIMITER ;
 -- ##########################################
 -- CREATE book order detail
 -- ##########################################
-DROP PROCEDURE IF EXISTS sp_CreateBookOrderDetails;
+DROP PROCEDURE IF EXISTS sp_CreateBookOrderDetail;
 
 DELIMITER //
-CREATE PROCEDURE sp_CreateBookOrderDetails(
+CREATE PROCEDURE sp_CreateBookOrderDetail(
     IN p_bookID INT,
     IN p_orderID INT,
     IN p_quantityOrdered INT,
@@ -135,10 +135,10 @@ DELIMITER ;
 -- ##########################################
 -- UPDATE book order detail
 -- ##########################################
-DROP PROCEDURE IF EXISTS sp_UpdateBookOrderDetails;
+DROP PROCEDURE IF EXISTS sp_UpdateBookOrderDetail;
 
 DELIMITER //
-CREATE PROCEDURE sp_UpdateBookOrderDetails(
+CREATE PROCEDURE sp_UpdateBookOrderDetail(
     p_oldOrderID INT,
     p_oldBookID INT,
     IN p_newOrderID INT,
@@ -208,8 +208,88 @@ BEGIN
         DELETE FROM Orders
         WHERE orderID = OLD.orderID;
     END IF;
-END;
-//
+END //
+DELIMITER ;
+
+
+-- #############################
+-- CREATE book
+-- #############################
+DROP PROCEDURE IF EXISTS sp_CreateBook;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateBook(
+    IN p_genreID INT,
+    IN p_title VARCHAR(200),
+    IN p_author VARCHAR(100),
+    IN p_isbn VARCHAR(13),
+    IN p_quantity INT,
+    IN p_price DECIMAL(6,2),
+    IN p_totalSold INT,
+    IN p_description VARCHAR(5000),
+    OUT p_bookID INT)
+BEGIN
+    INSERT INTO Books (genreID, title, author, isbn, quantity, price, totalSold, description) 
+    VALUES (p_genreID, p_title, p_author, p_isbn, p_quantity, p_price, p_totalSold, p_description);
+
+    -- Store the ID of the last inserted row
+    SELECT LAST_INSERT_ID() into p_bookID;
+    -- Display the ID of the last inserted book.
+    SELECT LAST_INSERT_ID() AS 'new_bookID';
+
+END //
+DELIMITER ;
+
+-- #############################
+-- DELETE book
+-- #############################
+DROP PROCEDURE IF EXISTS sp_DeleteBook;
+
+DELIMITER //
+CREATE PROCEDURE sp_DeleteBook(IN p_bookID INT)
+BEGIN
+    DECLARE error_message VARCHAR(255); 
+
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propogate the custom error message to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+        -- Deleting corresponding rows from BookOrderDetails to prevent a data anamoly
+        DELETE FROM BookOrderDetails WHERE bookID = p_bookID;
+
+        DELETE FROM Books WHERE bookID = p_bookID;
+
+        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
+        IF ROW_COUNT() = 0 THEN
+            set error_message = CONCAT('No matching record found in Books for id: ', p_bookID);
+            -- Trigger custom error, invoke EXIT HANDLER
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        END IF;
+
+    COMMIT;
+
+END //
+DELIMITER ;
+
+-- #############################
+-- UPDATE bsg_people
+-- #############################
+DROP PROCEDURE IF EXISTS sp_UpdateBook;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateBook(IN p_bookID INT, IN p_genreID INT, IN p_title VARCHAR(200), IN p_author VARCHAR(100), IN p_isbn VARCHAR(13),
+                                IN p_quantity INT, IN p_price DECIMAL(6,2), IN p_totalSold INT, IN p_description VARCHAR(5000))
+
+BEGIN
+    UPDATE Books SET genreID = p_genreID, title = p_title, author = p_author, isbn = p_isbn, quantity = p_quantity,
+                     price = p_price, totalSold = p_totalSold, description = p_description WHERE bookID = p_bookID; 
+END //
 DELIMITER ;
 
 
