@@ -2,7 +2,7 @@
 
 # Bookstore Database Web App
 
-This web application interfaces with a MySQL bookstore database. It provides CRUD operations via a Node.js + Express backend. It supports dynamic data rendering using Handlebars.
+This web application interfaces with a MySQL bookstore database and  provides CRUD operations via a Node.js + Express backend. It supports dynamic data rendering using Handlebars.
 
 ---
 ## Features
@@ -35,9 +35,9 @@ This project was developed with assistance from Microsoft Copilot for code gener
 
 ---
 ## Citation
-1. Adapted from and based on CS 340 - Explorations - Web Application Technology
+- Adapted from and based on CS 340 - Explorations - Web Application Technology
 Source: [Oregon State University Canvas] (https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131)
-2. Adapted from and based on CS 340 - Explorations - Implementing CUD operations in your app
+- Adapted from and based on CS 340 - Explorations - Implementing CUD operations in your app
 Source: [Oregon State University Canvas] (https://canvas.oregonstate.edu/courses/2017561/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25645149)
-3. [Microsoft Copilot] (https://copilot.microsoft.com/)
+- [Microsoft Copilot] (https://copilot.microsoft.com/)
 
