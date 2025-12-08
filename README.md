@@ -31,7 +31,7 @@ This web application interfaces with a MySQL bookstore database and provides CRU
 
 ---
 ## How AI Was Used
-This project was developed with assistance from Microsoft Copilot for code generation, explanations and debugging Guidance. Detailed prompts to guide Copilot’s responses were added at the beginning of relavant documents.
+This project was developed with assistance from Microsoft Copilot for code generation, explanations and debugging guidance. Detailed prompts to guide Copilot’s responses were added at the beginning of relavant documents.
 
 ---
 ## Citation
@@ -41,7 +41,7 @@ Source: [Oregon State University Canvas] (https://canvas.oregonstate.edu/courses
 Source: [Oregon State University Canvas] (https://canvas.oregonstate.edu/courses/2017561/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25645149)
 - Utilized Coolors tool for color generation (https://coolors.co)
 - Copied from Google Fonts for CSS variable style, font link relationships, and font hypertext reference (https://fonts.google.com)
-- Adapted from and based on based on W3Schools explanation on CSS links, CSS buttons, and CSS Horizontal & Vertical Align
+- Adapted from and based on W3Schools explanation on CSS links, CSS buttons, and CSS Horizontal & Vertical Align
 Source URL (Links): https://www.w3schools.com/css/css_link.asp
 Source URL (Buttons): https://www.w3schools.com/css/css3_buttons.asp
 Source URL (Align): https://www.w3schools.com/css/css_align.asp
