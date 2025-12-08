@@ -55,13 +55,13 @@ Source URL: https://copilot.microsoft.com/
                     <input type="hidden" name="update_users_userID" value="{{this.userID}}" required>
 
                     <label for='update_users_userName'>User Name: </label>
-                    <input type="text" name="update_users_userName" maxlength="100" value="{{this.userName}}"/><br>
+                    <input type="text" name="update_users_userName" maxlength="100" value="{{this.userName}}" required/><br>
 
                     <label for='update_users_email'>Email: </label>
-                    <input type="text" name="update_users_email" maxlength="320" value="{{this.email}}"/><br>
+                    <input type="text" name="update_users_email" maxlength="320" value="{{this.email}}" required/><br>
 
                     <label for='update_users_phoneNumber'>Phone Number: </label>
-                    <input type="text" name="update_users_phoneNumber" maxlength="10" value="{{this.phoneNumber}}"/><br>
+                    <input type="text" name="update_users_phoneNumber" maxlength="10" value="{{this.phoneNumber}}" required/><br>
                     
                     <input type="submit" value="Save Update" />
                 </form>
@@ -76,13 +76,13 @@ Source URL: https://copilot.microsoft.com/
     <form class="cuForm" id="create_users_form" method="POST" action="/users/create">
 
     <label for='create_users_userName'>User Name: </label>
-    <input type="text" name="create_users_userName" maxlength="100" value="{{this.userName}}"/><br>
+    <input type="text" name="create_users_userName" maxlength="100" value="{{this.userName}}" required/><br>
 
     <label for='create_users_email'>Email: </label>
-    <input type="text" name="create_users_email" maxlength="320" value="{{this.email}}"/><br>
+    <input type="text" name="create_users_email" maxlength="320" value="{{this.email}}" required/><br>
 
     <label for='create_users_phoneNumber'>Phone Number: </label>
-    <input type="text" name="create_users_phoneNumber" maxlength="10" value="{{this.phoneNumber}}"/><br>
+    <input type="text" name="create_users_phoneNumber" maxlength="10" value="{{this.phoneNumber}}" required/><br>
 
     <input type="submit" value="Submit" />
     <br>

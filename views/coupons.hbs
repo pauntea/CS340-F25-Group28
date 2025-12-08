@@ -55,7 +55,7 @@ Source URL: https://copilot.microsoft.com/
                     <input type="hidden" name="update_coupons_couponID" value="{{this.couponID}}" required>
 
                     <label for='update_coupons_couponCode'>Coupon Code: </label>
-                    <input type="text" name="update_coupons_couponCode" maxlength="50" value="{{this.couponCode}}"/><br>
+                    <input type="text" name="update_coupons_couponCode" maxlength="50" value="{{this.couponCode}}" required/><br>
 
                     <label>Discount Type: </label>
                     <select name="update_coupons_discountType" required>
@@ -68,7 +68,7 @@ Source URL: https://copilot.microsoft.com/
                     </select><br>
 
                     <label for='update_coupons_discount'>Discount: </label>
-                    <input type="number" name="update_coupons_discount" min="0" value="{{this.discount}}"/><br>
+                    <input type="number" name="update_coupons_discount" min="0" value="{{this.discount}}" required/><br>
                     
                     <input type="submit" value="Save Update" />
                 </form>
@@ -83,7 +83,7 @@ Source URL: https://copilot.microsoft.com/
 <form class="cuForm" id="create_coupons_form" method="POST" action="/coupons/create">
   
   <label for='create_coupons_couponCode'>Coupon Code: </label>
-  <input type="text" name="create_coupons_couponCode" maxlength="50" value="{{this.couponCode}}"/><br>
+  <input type="text" name="create_coupons_couponCode" maxlength="50" value="{{this.couponCode}}" required/><br>
 
   <label>Discount Type: </label>
   <select name="create_coupons_discountType" required>
@@ -96,7 +96,7 @@ Source URL: https://copilot.microsoft.com/
   </select><br>
 
   <label for='create_coupons_discount'>Discount: </label>
-  <input type="number" name="create_coupons_discount" min="0" value="{{this.discount}}"/><br>
+  <input type="number" name="create_coupons_discount" min="0" value="{{this.discount}}" required/><br>
 
   <input type="submit" value="Submit" />
   <br>
