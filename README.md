@@ -2,7 +2,7 @@
 
 # Bookstore Database Web App
 
-This web application interfaces with a MySQL bookstore database and  provides CRUD operations via a Node.js + Express backend. It supports dynamic data rendering using Handlebars.
+This web application interfaces with a MySQL bookstore database and provides CRUD operations via a Node.js + Express backend. It supports dynamic data rendering using Handlebars.
 
 ---
 ## Features
