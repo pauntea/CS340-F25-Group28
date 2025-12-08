@@ -2,7 +2,7 @@
 -- Kozy Nook’s Books Sales Management System
 -- Xichun Xu & Adrienne Jaimie Paunte
 
--- Database Manipulation queries for a partially implemented Project Website using the bookstore database.
+-- Database Manipulation queries for implemented Project Website using the bookstore database.
 
 -- --------------------------------------------------------
 -- READ OPERATIONS for all tables

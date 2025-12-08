@@ -5,7 +5,7 @@
 -- 2025-10-30
 -- MySQL Workbench Forward Engineering
 -- phpMyAdmin SQL Dump
--- Project Step 2 Draft Data Definition Queries and the sample data INSERT statements
+-- Project Data Definition Queries and the sample data INSERT statements
 
 
 SET FOREIGN_KEY_CHECKS=0;

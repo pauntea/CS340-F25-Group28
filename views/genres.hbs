@@ -36,11 +36,11 @@ Source URL: https://copilot.microsoft.com/
             <td>
               <form action="/genres/delete" method="POST" style="display:inline;">
                 <input type="hidden" name="delete_genres_genreID" value="{{this.genreID}}" />
-                <button type="submit">Delete</button>
+                <button class="deleteButton" type="submit">Delete</button>
               </form>
 
             {{! UPDATE - EDIT button }}
-            <button type="button" onclick="toggleUpdateForm('{{this.genreID}}')" >Edit</button>
+            <button class="editButton" type="button" onclick="toggleUpdateForm('{{this.genreID}}')" >Edit</button>
             </td>
         </tr>
 
@@ -54,7 +54,7 @@ Source URL: https://copilot.microsoft.com/
                     <input type="text" name="update_genres_genre" maxlength="50" value="{{this.genre}}" required/><br>
                     <br>
                     
-                    <input type="submit" value="Save Update" />
+                    <input class="submitButton" type="submit" value="Save Update" />
                 </form>
             </td>
         </tr>
@@ -69,7 +69,7 @@ Source URL: https://copilot.microsoft.com/
     <input type="text" name="create_genres_genre" maxlength="50" value="{{this.genre}}" required/><br>
     <br>
 
-    <input type="submit" value="Submit" />
+    <input class="submitButton" type="submit" value="Submit" />
     <br>
 </form>
 
