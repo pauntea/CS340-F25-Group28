@@ -7,7 +7,7 @@
 -- Kozy Nook’s Books Sales Management System
 -- Xichun Xu & Adrienne Jaimie Paunte
 
--- PL/SQL for CREATE, UPDATE, DELETE Orders and UPDATE BookOrderDetails
+-- PL/SQL for CREATE, UPDATE, DELETE on all tables
 -- PL/SQL for RESET DB
 
 -- AI tools were used: 
@@ -65,10 +65,7 @@ BEGIN
     END;
 
     START TRANSACTION;
-        -- Deleting corresponding rows from Orders to prevent a data anamoly
-        DELETE FROM Orders WHERE userID = p_userID;
-
-        DELETE FROM Users WHERE userID = p_userID;
+      DELETE FROM Users WHERE userID = p_userID;
 
         -- ROW_COUNT() returns the number of rows affected by the preceding statement.
         IF ROW_COUNT() = 0 THEN
@@ -146,9 +143,6 @@ BEGIN
     END;
 
     START TRANSACTION;
-        -- Deleting corresponding rows from BookOrderDetails to prevent a data anamoly
-        DELETE FROM BookOrderDetails WHERE bookID = p_bookID;
-
         DELETE FROM Books WHERE bookID = p_bookID;
 
         -- ROW_COUNT() returns the number of rows affected by the preceding statement.
@@ -389,9 +383,6 @@ BEGIN
     END;
 
     START TRANSACTION;
-        -- Updating corresponding rows from Books to prevent a data anamoly
-        UPDATE Books SET genreID = NULL WHERE genreID = p_genreID;
-
         DELETE FROM Genres WHERE genreID = p_genreID;
 
         -- ROW_COUNT() returns the number of rows affected by the preceding statement.
@@ -464,10 +455,7 @@ BEGIN
     END;
 
     START TRANSACTION;
-        -- Updating corresponding rows from Orders to prevent a data anamoly
-        UPDATE Orders SET couponID = NULL WHERE couponID = p_couponID; 
-
-        DELETE FROM Coupons WHERE couponID = p_couponID;
+       DELETE FROM Coupons WHERE couponID = p_couponID;
 
         -- ROW_COUNT() returns the number of rows affected by the preceding statement.
         IF ROW_COUNT() = 0 THEN

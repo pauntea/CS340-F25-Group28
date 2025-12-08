@@ -38,6 +38,10 @@
 // prompt - "Why is the trigger disappear after I reset the database? How can I make it persist?"
 // Source URL: https://copilot.microsoft.com/
 
+// date: 12/08/2025
+// prompt - "How to display an error message when deleting a genre that is referenced by existing books in this code snippet?"
+// Source URL: https://copilot.microsoft.com/
+
 
 // ########################################
 // ########## SETUP
@@ -465,11 +469,16 @@ app.post('/users/delete', async function (req, res) {
         // Redirect the user to the updated webpage data
         res.redirect('/users');
     } catch (error) {
-        console.error('Error executing PL/SQL:', error);
-        // Send a generic error message to the browser
-        res.status(500).send(
-            'An error occurred while executing the PL/SQL.'
-        );
+        if (error.code === 'ER_ROW_IS_REFERENCED_2' || error.errno === 1451) {
+            // Render the users page with an error message
+            res.status(400).send(
+                'Cannot delete this user because it is linked to existing order(s).'
+            );
+        } else {
+            res.status(500).send(
+                'An error occurred while executing the PL/SQL.'
+            );
+        }
     }
 });
 
@@ -490,11 +499,16 @@ app.post('/books/delete', async function (req, res) {
         // Redirect the user to the updated webpage data
         res.redirect('/books');
     } catch (error) {
-        console.error('Error executing PL/SQL:', error);
-        // Send a generic error message to the browser
-        res.status(500).send(
-            'An error occurred while executing the PL/SQL.'
-        );
+        if (error.code === 'ER_ROW_IS_REFERENCED_2' || error.errno === 1451) {
+            // Render the users page with an error message
+            res.status(400).send(
+                'Cannot delete this book because it is linked to existing order(s).'
+            );
+        } else {
+            res.status(500).send(
+                'An error occurred while executing the PL/SQL.'
+            );
+        }
     }
 });
 
@@ -561,11 +575,16 @@ app.post('/genres/delete', async function (req, res) {
         // Redirect the user to the updated webpage data
         res.redirect('/genres');
     } catch (error) {
-        console.error('Error executing PL/SQL:', error);
-        // Send a generic error message to the browser
-        res.status(500).send(
-            'An error occurred while executing the PL/SQL.'
-        );
+        if (error.code === 'ER_ROW_IS_REFERENCED_2' || error.errno === 1451) {
+            // Render the users page with an error message
+            res.status(400).send(
+                'Cannot delete this genre because it is linked to existing book(s).'
+            );
+        } else {
+            res.status(500).send(
+                'An error occurred while executing the PL/SQL.'
+            );
+        }
     }
 });
 
@@ -586,11 +605,16 @@ app.post('/coupons/delete', async function (req, res) {
         // Redirect the user to the updated webpage data
         res.redirect('/coupons');
     } catch (error) {
-        console.error('Error executing PL/SQL:', error);
-        // Send a generic error message to the browser
-        res.status(500).send(
-            'An error occurred while executing the PL/SQL.'
-        );
+        if (error.code === 'ER_ROW_IS_REFERENCED_2' || error.errno === 1451) {
+            // Render the users page with an error message
+            res.status(400).send(
+                'Cannot delete this coupon because it is linked to existing order(s).'
+            );
+        } else {
+            res.status(500).send(
+                'An error occurred while executing the PL/SQL.'
+            );
+        }
     }
 });
 

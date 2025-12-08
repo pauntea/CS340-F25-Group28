@@ -85,10 +85,10 @@ Source URL: https://copilot.microsoft.com/
                 </select><br>
 
                 <label for='update_bookorderdetails_quantityOrdered'>Quantity: </label>
-                <input type="number" name="update_bookorderdetails_quantityOrdered" min="0" value="{{this.quantityOrdered}}"/><br>
+                <input type="number" name="update_bookorderdetails_quantityOrdered" min="0" value="{{this.quantityOrdered}}" required/><br>
 
                 <label for='update_bookorderdetails_price'>Price: </label>
-                <input type="number" step = "0.01" name="update_bookorderdetails_price" min="0" value="{{this.price}}"/>
+                <input type="number" step = "0.01" name="update_bookorderdetails_price" min="0" value="{{this.price}}" required/>
                 <br>
                 
                 <input type="submit" value="Save Update" />
