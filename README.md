@@ -6,7 +6,7 @@ This web application interfaces with a MySQL bookstore database and provides CRU
 
 ---
 ## Features
-- Connects to a MySQL bookstore database (Database schema dirgram can be viewed in bookstore_schema_diagram.)
+- Connects to a MySQL bookstore database (Database schema dirgram can be viewed in bookstore_schema_diagram.png)
 - Create, Read, Update, Delete implemented for all entities.
 - Reset function added to reset the database to its original state.
 
