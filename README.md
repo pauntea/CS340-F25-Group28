@@ -39,5 +39,11 @@ This project was developed with assistance from Microsoft Copilot for code gener
 Source: [Oregon State University Canvas] (https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131)
 - Adapted from and based on CS 340 - Explorations - Implementing CUD operations in your app
 Source: [Oregon State University Canvas] (https://canvas.oregonstate.edu/courses/2017561/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25645149)
+- Utilized Coolors tool for color generation (https://coolors.co)
+- Copied from Google Fonts for CSS variable style, font link relationships, and font hypertext reference (https://fonts.google.com)
+- Adapted from and based on based on W3Schools explanation on CSS links, CSS buttons, and CSS Horizontal & Vertical Align
+Source URL (Links): https://www.w3schools.com/css/css_link.asp
+Source URL (Buttons): https://www.w3schools.com/css/css3_buttons.asp
+Source URL (Align): https://www.w3schools.com/css/css_align.asp
 - [Microsoft Copilot] (https://copilot.microsoft.com/)
 
