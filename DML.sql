@@ -9,13 +9,13 @@
 -- --------------------------------------------------------
 
 -- get all records from Coupons table
-SELECT * FROM Coupons;
+SELECT * FROM Coupons ORDER BY couponID;
 
 -- get all records from Genres table
-SELECT * FROM Genres;
+SELECT * FROM Genres ORDER BY genreID;
 
 -- get all records from Users table
-SELECT * FROM Users;
+SELECT * FROM Users ORDER BY userID;
 
 -- get all records from Books table, showing genre instead of genre Id
 SELECT Books.bookID, Genres.genre AS genre, Books.title, Books.author, Books.isbn, 
