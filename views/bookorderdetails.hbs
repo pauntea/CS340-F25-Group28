@@ -50,11 +50,11 @@ Source URL: https://copilot.microsoft.com/
               <form action="/bookorderdetails/delete" method="POST" style="display:inline;">
                 <input type="hidden" name="delete_order_id" value="{{this.orderID}}" />
                 <input type="hidden" name="delete_book_id" value="{{this.bookID}}" />
-                <button type="submit">Delete</button>
+                <button class="deleteButton" type="submit">Delete</button>
               </form>
 
             {{! UPDATE - EDIT button }}
-            <button type="button" onclick="toggleUpdateForm('{{this.orderID}}-{{this.bookID}}')">Edit</button>
+            <button class="editButton" type="button" onclick="toggleUpdateForm('{{this.orderID}}-{{this.bookID}}')">Edit</button>
             </td>
         </tr>
 
@@ -91,7 +91,7 @@ Source URL: https://copilot.microsoft.com/
                 <input type="number" step = "0.01" name="update_bookorderdetails_price" min="0" value="{{this.price}}" required/>
                 <br>
                 
-                <input type="submit" value="Save Update" />
+                <input class="submitButton" type="submit" value="Save Update" />
                 </form>
             </td>
         </tr>

@@ -50,11 +50,11 @@ Source URL: https://copilot.microsoft.com/
             <td>
               <form action="/books/delete" method="POST" style="display:inline;">
                 <input type="hidden" name="delete_books_bookID" value="{{this.bookID}}" />
-                <button type="submit">Delete</button>
+                <button class="deleteButton" type="submit">Delete</button>
               </form>
 
             {{! UPDATE - EDIT button }}
-            <button type="button" onclick="toggleUpdateForm('{{this.bookID}}')">Edit</button>
+            <button class="editButton" type="button" onclick="toggleUpdateForm('{{this.bookID}}')">Edit</button>
             </td>
         </tr>
 
@@ -95,7 +95,7 @@ Source URL: https://copilot.microsoft.com/
                     <input type="text" name="update_books_description" maxlength="5000" value="{{this.description}}" required/><br>
                     <br>
                     
-                    <input type="submit" value="Save Update" />
+                    <input class="submitButton" type="submit" value="Save Update" />
                 </form>
             </td>
         </tr>
@@ -137,7 +137,7 @@ Source URL: https://copilot.microsoft.com/
   <label for='create_books_description'>Description: </label>
   <input type="text" name="create_books_description" maxlength="5000" value="{{this.description}}" required/><br>
 
-  <input type="submit" value="Submit" />
+  <input class="submitButton" type="submit" value="Submit" />
   <br>
 </form>
 

@@ -1,21 +1,128 @@
 /* 
 Citation for CS 340 Project - Group 28
-Date: 11/06/2025
-Adapted from and based on CS 340 - Exploration - Web Application Technology
+Date: 11/06/2025, 12/08/2025
+Adapted from and based on CS 340 - Exploration - Web Application Technology (11/06/2025) and Coolors (12/08/2025)
+Copied from Google Fonts for CSS variable style (12/08/2025)
+Also based on W3Schools explanation on CSS links, CSS buttons, and CSS Horizontal & Vertical Align (12/08/2025)
 Source URL (Web Application): https://canvas.oregonstate.edu/courses/2017561/pages/exploration-web-application-technology-2?module_item_id=25645131
+Source URL (Font): https://fonts.google.com
+Source URL (Coolors): https://coolors.co
+Source URL (Links): https://www.w3schools.com/css/css_link.asp
+Source URL (Buttons): https://www.w3schools.com/css/css3_buttons.asp
+Source URL (Align): https://www.w3schools.com/css/css_align.asp
 */
 
-h1, h2, h3 { margin-left: 16px;}
-table {border-collapse: collapse;margin-left: 32px;}
+html {   
+    font-family: "DM Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+h1 { 
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    padding: 10px;
+    margin-left: 250px;
+    margin-right: 250px;
+    background-color: #EFF2F1;
+    border-radius: 5px;
+}
+
+table {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}
+
 th, td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: center;
 }
-th {background-color: #f2f2f2;}
-tr:nth-child(even) {background-color: #f9f9f9;}
-.cuForm { margin-left: 32px;}
-input, select { margin-bottom: 4px;margin-right: 12px;}
-nav {background-color: #cecece;padding: 16px;}
-a {margin-left: 16px;}
-.homepageDescription {margin-left: 32px;}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.cuForm { 
+    padding-top: 30px;
+    padding-bottom: 30px;
+    margin-left: 250px;
+    margin-right: 250px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #EFF2F1;
+}
+
+input, select { 
+    margin: 5px;
+}
+
+nav {
+    background-color: #1B2432;
+    padding: 16px;
+    text-align: center;
+}
+
+a {
+    margin-left: 16px;
+    color: #cecece;
+    text-decoration: none;
+}
+
+.submitButton {
+    color: #f9f9f9;
+    background-color: #1B2432;
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 5%;
+}
+
+.editButton {
+    background-color: #f9f9f9;
+    border-color: #1B2432;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5%;
+}
+
+.deleteButton {
+    background-color: #b71a1a;
+    border-color: #b71a1a;
+    color: #f9f9f9;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5%;
+}
+
+.homepageDescription {
+    text-align: center;
+}
+
+.projectName {
+    font-family: "Playwrite NO", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+}
+
+.businessName {
+    font-family: "Playwrite NO", cursive;
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0;
+    margin-bottom: 20px;
+    font-style: normal;
+    text-align: center;
+    color: #cecece;
+}

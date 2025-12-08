@@ -61,11 +61,11 @@ Source URL: https://copilot.microsoft.com/
       <td>
         <form action="/orders/delete" method="POST" style="display:inline;">
           <input type="hidden" name="delete_orders_id" value="{{this.orderID}}" />
-          <button type="submit">Delete</button>
+          <button class="deleteButton" type="submit">Delete</button>
         </form>
 
       {{! EDIT button }}
-        <button type="button" onclick="toggleUpdateForm('{{this.orderID}}')">Edit</button>
+        <button class="editButton" type="button" onclick="toggleUpdateForm('{{this.orderID}}')">Edit</button>
       </td>
     </tr>
 
@@ -115,7 +115,7 @@ Source URL: https://copilot.microsoft.com/
             {{/each}}
           </select><br>
 
-          <input type="submit" value="Save Update" />
+          <input class="submitButton" type="submit" value="Save Update" />
         </form>
       </td>
     </tr>
@@ -186,9 +186,9 @@ Source URL: https://copilot.microsoft.com/
     </div>
   </div>
 
-  <button type="button" onclick="addBookItem()">Add Another Book</button><br><br>
+  <button class="submitButton" type="button" onclick="addBookItem()">Add Another Book</button><br><br>
 
-  <input type="submit" />
+  <input class="submitButton" type="submit" />
 </form>
 
 {{! JavaScript toggle function }}

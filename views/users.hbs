@@ -40,11 +40,11 @@ Source URL: https://copilot.microsoft.com/
             <td>
               <form action="/users/delete" method="POST" style="display:inline;">
                 <input type="hidden" name="delete_users_userID" value="{{this.userID}}" />
-                <button type="submit">Delete</button>
+                <button class="deleteButton" type="submit">Delete</button>
               </form>
 
             {{! UPDATE - EDIT button }}
-            <button type="button" onclick="toggleUpdateForm('{{this.userID}}')">Edit</button>
+            <button class="editButton" type="button" onclick="toggleUpdateForm('{{this.userID}}')">Edit</button>
             </td>
         </tr>
 
@@ -63,7 +63,7 @@ Source URL: https://copilot.microsoft.com/
                     <label for='update_users_phoneNumber'>Phone Number: </label>
                     <input type="text" name="update_users_phoneNumber" maxlength="10" value="{{this.phoneNumber}}" required/><br>
                     
-                    <input type="submit" value="Save Update" />
+                    <input class="submitButton" type="submit" value="Save Update" />
                 </form>
             </td>
         </tr>
@@ -84,7 +84,7 @@ Source URL: https://copilot.microsoft.com/
     <label for='create_users_phoneNumber'>Phone Number: </label>
     <input type="text" name="create_users_phoneNumber" maxlength="10" value="{{this.phoneNumber}}" required/><br>
 
-    <input type="submit" value="Submit" />
+    <input class="submitButton" type="submit" value="Submit" />
     <br>
 </form>
 
