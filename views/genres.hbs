@@ -40,7 +40,7 @@ Source URL: https://copilot.microsoft.com/
               </form>
 
             {{! UPDATE - EDIT button }}
-            <button type="button" onclick="toggleUpdateForm('{{this.genreID}}')">Edit</button>
+            <button type="button" onclick="toggleUpdateForm('{{this.genreID}}')" >Edit</button>
             </td>
         </tr>
 
@@ -51,7 +51,7 @@ Source URL: https://copilot.microsoft.com/
                     <input type="hidden" name="update_genres_genreID" value="{{this.genreID}}" required>
 
                     <label for='update_genres_genre'>Genre: </label>
-                    <input type="text" name="update_genres_genre" maxlength="50" value="{{this.genre}}"/><br>
+                    <input type="text" name="update_genres_genre" maxlength="50" value="{{this.genre}}" required/><br>
                     <br>
                     
                     <input type="submit" value="Save Update" />
@@ -66,7 +66,7 @@ Source URL: https://copilot.microsoft.com/
 <h2>Create a Genre</h2>
 <form class="cuForm" id="create_genres_form" method="POST" action="/genres/create">
     <label for='create_genres_genre'>Genre: </label>
-    <input type="text" name="create_genres_genre" maxlength="50" value="{{this.genre}}"/><br>
+    <input type="text" name="create_genres_genre" maxlength="50" value="{{this.genre}}" required/><br>
     <br>
 
     <input type="submit" value="Submit" />
