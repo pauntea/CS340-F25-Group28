@@ -95,29 +95,6 @@ INSERT INTO `Books` (`bookID`, `genreID`, `title`, `author`, `isbn`, `quantity`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Coupons`
---
-
-DROP TABLE IF EXISTS `Coupons`;
-CREATE TABLE `Coupons` (
-`couponID` int(11) NOT NULL,
-`couponCode` varchar(50) NOT NULL,
-`discountType` enum('value','percentage') NOT NULL,
-`discount` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `Coupons`
---
-
-INSERT INTO `Coupons` (`couponID`, `couponCode`, `discountType`, `discount`) VALUES
-(1, 'HAPPYREAD5', 'value', 5),
-(2, 'KOZYFORYOU10', 'percentage', 10),
-(3, 'KOZYKLASSICS6', 'percentage', 6);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `Genres`
 --
 
@@ -167,6 +144,29 @@ INSERT INTO `Orders` (`orderID`, `userID`, `orderDate`, `totalPrice`, `street`, 
 (472, 6578, '2025-04-12', 15.00, '45 Forestville Street', 'Seattle', 'Washington', '98111', 1),
 (985, 534, '2025-09-27', 27.00, '70 Creekside Bay', 'Houston', 'Texas', '77012', 2),
 (1064, 534, '2025-10-29', 6.00, '193 Sunset Boulevard', 'San Francisco', 'California', '94173', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Coupons`
+--
+
+DROP TABLE IF EXISTS `Coupons`;
+CREATE TABLE `Coupons` (
+`couponID` int(11) NOT NULL,
+`couponCode` varchar(50) NOT NULL,
+`discountType` enum('value','percentage') NOT NULL,
+`discount` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `Coupons`
+--
+
+INSERT INTO `Coupons` (`couponID`, `couponCode`, `discountType`, `discount`) VALUES
+(1, 'HAPPYREAD5', 'value', 5),
+(2, 'KOZYFORYOU10', 'percentage', 10),
+(3, 'KOZYKLASSICS6', 'percentage', 6);
 
 -- --------------------------------------------------------
 

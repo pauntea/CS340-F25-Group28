@@ -286,6 +286,12 @@ DELIMITER ;
 
 -- ##########################################
 -- UPDATE book order detail
+
+-- Citation for AI tool used
+-- date: 12/01/2025
+-- prompt - "If I am updating an intersection table where orderID and bookID are foreign keys, 
+--           how can I update the foreign keys? I plan on picking the specific row to change via an inline edit button on a table."
+-- Source URL: https://copilot.microsoft.com/
 -- ##########################################
 DROP PROCEDURE IF EXISTS sp_UpdateBookOrderDetail;
 
@@ -486,6 +492,12 @@ DELIMITER ;
 
 -- ##########################################
 -- TRIGGER AFTER DELETE book order detail
+
+-- Citation for AI tool used
+-- date: 12/05/2025
+-- prompt - "Help me write a trigger so that once a row under BookOrderDetails is deleted, it will search if there are more lines
+--           associated with the same orderID. If no more lines exist, then delete the order from Orders table as well to avoid orphan order record."
+-- Source URL: https://copilot.microsoft.com/
 -- ##########################################
 DROP TRIGGER IF EXISTS trg_DeleteOrderIfNoDetails;
 DELIMITER //

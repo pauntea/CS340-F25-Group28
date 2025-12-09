@@ -386,6 +386,42 @@ app.post('/orders/create', async function (req, res) {
     }
 });
 
+app.post('/bookorderdetails/create', async function (req, res) {
+    try {
+        // Parse frontend form information
+        let data = req.body;
+                
+        // Cleanse data - If the quantityOrdered or price aren't numbers, make them NULL.
+        if (isNaN(parseInt(data.create_bookorderdetails_quantityOrdered)))
+            data.create_bookorderdetails_quantityOrdered = null;
+        if (isNaN(parseInt(data.create_bookorderdetails_price)))
+            data.create_bookorderdetails_price = null;
+
+        // Create and execute the query
+        // Using parameterized queries (Prevents SQL injection attacks)
+        const query1 = `CALL sp_CreateBookOrderDetail(?, ?, ?, ?);`;
+
+        // Store ID of last inserted row
+        await db.query(query1, [
+            data.create_bookorderdetails_bookID,
+            data.create_bookorderdetails_orderID,
+            data.create_bookorderdetails_quantityOrdered,
+            data.create_bookorderdetails_price
+        ]);
+
+        console.log(` Created book order detail. Order ID: ${data.create_bookorderdetails_orderID} Book ID: ${data.create_bookorderdetails_bookID} `);
+        
+        // Redirect back to the BookOrderDetails page
+        res.redirect('/bookorderdetails');
+    } catch (error) {
+        console.error('Error executing PL/SQL:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the PL/SQL.'
+        );
+    }
+});
+
 app.post('/genres/create', async function (req, res) {
     try {
         // Parse frontend form information
