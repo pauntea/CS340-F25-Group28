@@ -143,16 +143,16 @@ Source URL: https://copilot.microsoft.com/
 
 {{! JavaScript toggle function, Source: Copilot }}
 <script>
-  function toggleUpdateForm(id) {
-    // Hide all update forms
-    document.querySelectorAll("[id^='updateFormRow-']").forEach(row => {
-      row.style.display = "none";
-    });
+function toggleUpdateForm(id) {
+  // Hide all update forms
+  document.querySelectorAll("[id^='updateFormRow-']").forEach(row => {
+    row.style.display = "none";
+  });
 
-    // Show the selected form
-    const row = document.getElementById("updateFormRow-" + id);
-    if (row) {
-      row.style.display = "table-row";
-    }
+  // Show the selected form
+  const row = document.getElementById("updateFormRow-" + id);
+  if (row) {
+    row.style.display = "table-row";
   }
+}
 </script>
