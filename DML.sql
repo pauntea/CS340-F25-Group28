@@ -42,17 +42,23 @@ ORDER BY BookOrderDetails.orderID;
 -- READ OPERATIONS for dropdowns
 -- --------------------------------------------------------
 
+-- get all genreIDs and genres to populate the genre dropdown under Books
+SELECT genreID, genre FROM Genres;
+
 -- get all userIDs and usernames to populate the user dropdown under Orders
 SELECT userID, userName FROM Users;
 
 -- get all couponIDs and couponCodes to populate the coupon dropdown under Orders
 SELECT couponID, couponCode FROM Coupons;
 
--- get all bookIDs and titles to populate the book dropdown under BookOrderDetails
+-- get all bookIDs and titles to populate the book dropdown under Orders
 SELECT bookID, title FROM Books;
 
 -- get all orderID to populate the orderID dropdown under BookOrderDetails
 SELECT orderID FROM Orders;
+
+-- get all bookIDs and titles to populate the book dropdown under BookOrderDetails
+SELECT bookID, title FROM Books;
 
 
 -- --------------------------------------------------------
